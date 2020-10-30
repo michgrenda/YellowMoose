@@ -1,0 +1,134 @@
+.navbar {
+  /* =============== Variables =============== */
+  $navbar-background-color-primary: $white;
+  $navbar-color-primary: $color-naughty-gray;
+  $navbar-accent-color-primary: $color-baby-blue;
+  $navbar-accent-color-secondary: $color-midnight-black;
+
+  $navbar-box-shadow-values: 0 2px 4px 0;
+  $navbar-box-shadow-color-transparentize-amount: 0.9;
+
+  $navbar-height: 60px;
+  $navbar-font-size: 14px;
+  /* ===============    End    =============== */
+
+  background-color: $navbar-background-color-primary;
+  color: $navbar-color-primary;
+  box-shadow: $navbar-box-shadow-values
+    transparentize(
+      $color: $navbar-accent-color-secondary,
+      $amount: $navbar-box-shadow-color-transparentize-amount
+    );
+  font-size: $navbar-font-size;
+
+  &__panel {
+    height: $navbar-height;
+
+    margin: 0 auto;
+
+    position: relative;
+  }
+
+  &__list {
+    display: flex;
+
+    height: 100%;
+
+    margin: 0;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+
+    position: relative;
+
+    // State
+    &--is-hovered {
+      &:after {
+        content: "";
+        height: 0;
+        width: 0;
+
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid $navbar-accent-color-primary;
+
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  &__link {
+    color: $navbar-color-primary;
+
+    padding: 10px 15px;
+
+    text-transform: capitalize;
+    text-decoration: none;
+
+    &:hover {
+      color: $navbar-accent-color-primary;
+    }
+
+    // State
+    &--is-active {
+      font-weight: 500;
+    }
+
+    &--subpanel {
+      display: block;
+
+      padding: initial;
+    }
+  }
+
+  &__subpanel {
+    background-color: $navbar-background-color-primary;
+
+    z-index: 1;
+
+    position: absolute;
+    top: $navbar-height;
+
+    // State
+    &--is-extended {
+      box-shadow: $navbar-box-shadow-values
+        transparentize(
+          $color: $navbar-accent-color-secondary,
+          $amount: $navbar-box-shadow-color-transparentize-amount
+        );
+
+      border-top: 1px solid
+        transparentize(
+          $color: $navbar-accent-color-secondary,
+          $amount: $navbar-box-shadow-color-transparentize-amount
+        );
+    }
+  }
+
+  &__sublist-wrapper {
+    padding: 15px 10px;
+  }
+
+  &__sublist {
+    width: 20%;
+
+    margin-right: 20px;
+  }
+
+  &__sublist-title {
+    text-transform: capitalize;
+    font-size: $navbar-font-size;
+  }
+
+  &__subitem {
+    padding: 5px 0;
+  }
+}
