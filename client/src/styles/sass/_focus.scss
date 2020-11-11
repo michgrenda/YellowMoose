@@ -1,0 +1,7 @@
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+.js-focus-visible .focus-visible {
+  outline: 3px solid transparentize($color-curious-blue, 0.6);
+}

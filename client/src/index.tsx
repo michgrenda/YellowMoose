@@ -5,6 +5,8 @@ import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 // Styles
 import "./styles/build/index.css";
+// Focus
+import "focus-visible";
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,0 +1,14 @@
+.single-result {
+  background-color: $white;
+  margin: 0px 10px 12px;
+
+  &__photo {
+    height: 50px;
+    width: 50px;
+    background-color: green;
+  }
+
+  &__item {
+    display: flex;
+  }
+}

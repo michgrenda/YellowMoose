@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 // Interfaces
@@ -107,18 +107,20 @@ const Navbar: React.FC = () => {
   );
 
   // References
-  const subpanel = useRef<HTMLDivElement | null>(null);
+  const rowOfSubpanel = useRef<HTMLDivElement | null>(null);
 
   //
-  const handleLinkMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleLinkMouseEnter = (
+    e: React.MouseEvent<HTMLAnchorElement> | React.FocusEvent<HTMLAnchorElement>
+  ) => {
     const path: string | null =
       e.currentTarget.dataset.path || e.currentTarget.getAttribute("path");
     const parentElement = e.currentTarget.parentElement;
 
-    if (subpanel && subpanel.current) {
-      subpanel.current.classList.add("navbar__subpanel--is-extended");
+    if (rowOfSubpanel && rowOfSubpanel.current) {
+      rowOfSubpanel.current.classList.add("navbar__subpanel--is-extended");
       const currentSublist: HTMLElement | undefined = (Array.from(
-        subpanel.current.children
+        rowOfSubpanel.current.children
       ) as HTMLElement[]).find((sublistWrapper: HTMLElement) => {
         const name: string | null =
           sublistWrapper.dataset.name || sublistWrapper.getAttribute("name");
@@ -129,20 +131,22 @@ const Navbar: React.FC = () => {
 
       if (currentSublist && parentElement) {
         parentElement.classList.add("navbar__item--is-hovered");
-        currentSublist.style.display = "flex";
+        currentSublist.style.display = "block";
         setSublist([currentSublist, parentElement]);
       }
     }
   };
 
   //
-  const handleSubpanelClose = (e: React.MouseEvent<HTMLElement>) => {
-    if (subpanel && subpanel.current) {
+  const handleSubpanelClose = (
+    e: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>
+  ) => {
+    if (rowOfSubpanel && rowOfSubpanel.current) {
       if (
         !(e.relatedTarget instanceof HTMLElement) ||
-        !subpanel.current.contains(e.relatedTarget)
+        !rowOfSubpanel.current.contains(e.relatedTarget)
       ) {
-        subpanel.current.classList.remove("navbar__subpanel--is-extended");
+        rowOfSubpanel.current.classList.remove("navbar__subpanel--is-extended");
 
         if (sublist) {
           sublist[0].style.display = "none";
@@ -168,7 +172,6 @@ const Navbar: React.FC = () => {
         >
           {route.text}
         </NavLink>
-        <span className="navbar__indicator"></span>
       </li>
     )
   );
@@ -179,43 +182,54 @@ const Navbar: React.FC = () => {
     return (
       route.sublist && (
         <div
-          className="navbar__sublist-wrapper"
+          className="navbar__sublist-wrapper col-12"
           style={{ display: "none" }}
           key={route.path}
           data-name={route.path}
         >
-          {route.sublist.map(
-            (
-              subitem: {
-                title: string;
-                options: {
-                  path: string;
-                  text: string;
-                }[];
-              },
-              index: number
-            ): JSX.Element => (
-              <div className="navbar__sublist" key={index}>
-                {subitem.title && (
-                  <h3 className="navbar__sublist-title">{subitem.title}</h3>
-                )}
-                <ul className="navbar__sublist-options">
-                  {subitem.options.map(
-                    (option: { path: string; text: string }): JSX.Element => (
-                      <li className="navbar__subitem" key={option.path}>
-                        <NavLink
-                          className="navbar__link navbar__link--subpanel"
-                          to={option.path}
-                        >
-                          {option.text}
-                        </NavLink>
-                      </li>
-                    )
+          <div className="row">
+            {route.sublist.map(
+              (
+                subitem: {
+                  title: string;
+                  options: {
+                    path: string;
+                    text: string;
+                  }[];
+                },
+                index,
+                array
+              ): JSX.Element => (
+                <Fragment key={index}>
+                  <div className="navbar__sublist col-12 col-sm-6 col-md-3">
+                    {subitem.title && (
+                      <h3 className="navbar__sublist-title">{subitem.title}</h3>
+                    )}
+                    <ul className="navbar__sublist-options">
+                      {subitem.options.map(
+                        (option: {
+                          path: string;
+                          text: string;
+                        }): JSX.Element => (
+                          <li className="navbar__subitem" key={option.path}>
+                            <NavLink
+                              className="navbar__link navbar__link--subpanel"
+                              to={option.path}
+                            >
+                              {option.text}
+                            </NavLink>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                  {index !== array.length - 1 && (
+                    <div className="navbar__sublist-divider d-block d-sm-none col-12"></div>
                   )}
-                </ul>
-              </div>
-            )
-          )}
+                </Fragment>
+              )
+            )}
+          </div>
         </div>
       )
     );
@@ -233,10 +247,11 @@ const Navbar: React.FC = () => {
                 </div>
                 <div
                   className="navbar__subpanel col-12"
-                  ref={subpanel}
                   onMouseLeave={handleSubpanelClose}
                 >
-                  {sublists}
+                  <div className="row" ref={rowOfSubpanel}>
+                    {sublists}
+                  </div>
                 </div>
               </div>
             </div>

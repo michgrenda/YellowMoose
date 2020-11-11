@@ -1,14 +1,14 @@
 .navbar {
   /* =============== Variables =============== */
   $navbar-background-color-primary: $white;
-  $navbar-color-primary: $color-naughty-gray;
-  $navbar-accent-color-primary: $color-baby-blue;
-  $navbar-accent-color-secondary: $color-midnight-black;
+  $navbar-color-primary: $color-dove-gray;
+  $navbar-accent-color-primary: $color-melrose;
+  $navbar-accent-color-secondary: $color-mine-shaft;
 
   $navbar-box-shadow-values: 0 2px 4px 0;
   $navbar-box-shadow-color-transparentize-amount: 0.9;
 
-  $navbar-height: 60px;
+  $navbar-height: 60px !global;
   $navbar-font-size: 14px;
   /* ===============    End    =============== */
 
@@ -68,11 +68,12 @@
   &__link {
     color: $navbar-color-primary;
 
-    padding: 10px 15px;
+    padding: 5px 15px;
 
     text-transform: capitalize;
     text-decoration: none;
 
+    &.focus-visible,
     &:hover {
       color: $navbar-accent-color-primary;
     }
@@ -92,7 +93,7 @@
   &__subpanel {
     background-color: $navbar-background-color-primary;
 
-    z-index: 1;
+    z-index: 9999;
 
     position: absolute;
     top: $navbar-height;
@@ -117,10 +118,12 @@
     padding: 15px 10px;
   }
 
-  &__sublist {
-    width: 20%;
-
-    margin-right: 20px;
+  &__sublist-divider {
+    border-top: 1px solid
+      transparentize(
+        $color: $navbar-accent-color-secondary,
+        $amount: $navbar-box-shadow-color-transparentize-amount
+      );
   }
 
   &__sublist-title {

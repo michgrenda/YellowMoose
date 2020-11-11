@@ -1,0 +1,136 @@
+.listing {
+  /* =============== Variables =============== */
+  $listing-background-color-primary: $color-aqua-haze;
+  $listing-color-primary: $color-silver-chalice;
+  $listing-accent-color-primary: $color-melrose;
+
+  $listing-accent-color-primary-transparentize-amount: 0.7;
+
+  $header-height: 40px;
+  $header-margin-B: 10px;
+  $link-text-wrapper-before-after-size: 20px;
+  /* ===============    End    =============== */
+  $root: &;
+
+  background-color: $listing-background-color-primary;
+  color: $listing-color-primary;
+
+  height: calc(100vh - #{$navbar-height + $searchbar-height});
+
+  font-size: 14px;
+
+  &__header {
+    background-color: $white;
+
+    display: flex;
+    align-items: center;
+
+    height: $header-height;
+
+    padding-left: 40px;
+    margin-bottom: $header-margin-B;
+  }
+
+  &__main {
+    height: calc(100% - #{$header-height + $header-margin-B});
+  }
+
+  &__link-text-wrapper {
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+
+    padding: 0 30px;
+
+    position: relative;
+
+    &:before,
+    &:after {
+      content: "";
+      height: $link-text-wrapper-before-after-size;
+      width: $link-text-wrapper-before-after-size;
+
+      position: absolute;
+      bottom: 0;
+    }
+
+    &:before {
+      left: -$link-text-wrapper-before-after-size;
+    }
+
+    &:after {
+      right: -$link-text-wrapper-before-after-size;
+    }
+  }
+
+  &__link {
+    color: $listing-color-primary;
+
+    height: 100%;
+
+    border-radius: 20px 20px 0px 0px;
+
+    text-decoration: none;
+    font-weight: 500;
+
+    // State
+    &--is-active {
+      background-color: $listing-background-color-primary;
+
+      z-index: 9;
+
+      #{$root}__link-text-wrapper {
+        &:before {
+          background-image: radial-gradient(
+            circle at left top,
+            transparent 70%,
+            $listing-background-color-primary 69%
+          );
+        }
+
+        &:after {
+          background-image: radial-gradient(
+            circle at right top,
+            transparent 70%,
+            $listing-background-color-primary 69%
+          );
+        }
+      }
+    }
+
+    &.focus-visible:not(&--is-active),
+    &:hover:not(&--is-active) {
+      background-color: transparentize(
+        $listing-accent-color-primary,
+        $listing-accent-color-primary-transparentize-amount
+      );
+
+      #{$root}__link-text-wrapper {
+        &:before {
+          background-image: radial-gradient(
+            circle at left top,
+            transparent 70%,
+            transparentize(
+                $listing-accent-color-primary,
+                $listing-accent-color-primary-transparentize-amount
+              )
+              69%
+          );
+        }
+
+        &:after {
+          background-image: radial-gradient(
+            circle at right top,
+            transparent 70%,
+            transparentize(
+                $listing-accent-color-primary,
+                $listing-accent-color-primary-transparentize-amount
+              )
+              69%
+          );
+        }
+      }
+    }
+  }
+}
