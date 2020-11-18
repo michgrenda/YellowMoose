@@ -3,56 +3,65 @@ import { NavLink } from "react-router-dom";
 // Components
 import SingleResult from "./SingleResult";
 
-// Delete
+// TEMPORARY
 const data = [
   {
-    location: "Warszawa, Praga-Północ, Mała",
+    location: "Warszawa",
     category: "Kawalerka do wynajęcia",
-    title: "1p, Praga Północ, 40 m2, metro, do negocjacji",
+    title: "1 piętro",
     price: 2100,
     priceCurrency: 52.5,
   },
 ];
 
-const Listing = () => {
-  // Delete
-  const results = data.map((singleData) => (
-    <SingleResult singleData={singleData} />
+// Interfaces
+interface Routes {
+  path: string;
+  text: string;
+}
+
+// TEMPORARY
+const routes: Routes[] = [
+  {
+    path: "/all",
+    text: "wszystkie",
+  },
+  {
+    path: "/private",
+    text: "prywatne",
+  },
+  {
+    path: "/business",
+    text: "biura / deweloperzy",
+  },
+];
+
+const Listing: React.FC = () => {
+  // TEMPORARY
+  const results = data.map((singleData, index) => (
+    <SingleResult singleData={singleData} key={index} />
   ));
 
   return (
-    <div className="listing">
-      <div className="listing__header">
-        <NavLink
-          to="/all"
-          className="listing__link"
-          activeClassName="listing__link--is-active"
-        >
-          <div className="listing__link-text-wrapper">
-            <div className="listing__link-text">Wszystkie</div>
-          </div>
-        </NavLink>
-        <NavLink
-          to="/private"
-          className="listing__link"
-          activeClassName="listing__link--is-active"
-        >
-          <div className="listing__link-text-wrapper">
-            <div className="listing__link-text">Prywatne</div>
-          </div>
-        </NavLink>
-        <NavLink
-          to="/business"
-          className="listing__link"
-          activeClassName="listing__link--is-active"
-        >
-          <div className="listing__link-text-wrapper">
-            <div className="listing__link-text">Biura / Deweloperzy</div>
-          </div>
-        </NavLink>
+    <section className="listing">
+      <div className="container-fluid">
+        <div className="listing__header">
+          {routes.map((route) => (
+            <NavLink
+              to={route.path}
+              className="listing__link"
+              activeClassName="listing__link--is-active"
+              key={route.path}
+            >
+              <div className="listing__link-text-wrapper">
+                <div className="listing__link-text">{route.text}</div>
+              </div>
+            </NavLink>
+          ))}
+        </div>
+        <div className="listing__main">{results}</div>
       </div>
-      <div className="listing__main">{results}</div>
-    </div>
+    </section>
   );
 };
 

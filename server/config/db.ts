@@ -4,7 +4,7 @@ import chalkColors from "./chalk/variables";
 
 const db: string = config.get("mongoURI");
 
-const connectDB: () => Promise<void> = async () => {
+const connectDB = async () => {
   try {
     await mongoose.connect(db, {
       useUnifiedTopology: true,

@@ -1,7 +1,7 @@
 import React from "react";
 
 const Searchbar: React.FC = () => {
-  return <div className="searchbar"></div>;
+  return <section className="searchbar"></section>;
 };
 
 export default Searchbar;

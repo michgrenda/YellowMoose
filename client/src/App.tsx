@@ -1,10 +1,26 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 // Components
 import Navbar from "./components/layouts/Navbar";
 import Searchbar from "./components/layouts/Searchbar";
-import Map from "./components/Map/Map";
-import Listing from "./components/Listing/Listing";
+// Pages
+import ListingPage from "./pages/ListingPage";
+
+// Interfaces
+export interface Routes {
+  path: string;
+  exact: boolean;
+  component?: React.ComponentType;
+}
+
+// TEMPORARY
+const routes: Routes[] = [
+  {
+    path: "/",
+    exact: false,
+    component: ListingPage,
+  },
+];
 
 const App: React.FC = () => {
   return (
@@ -13,16 +29,17 @@ const App: React.FC = () => {
       <Searchbar />
 
       <main className="main">
-        <div className="container-fluid">
-          <div className="row">
-            <section className="listing-box-container col-12 col-lg-7">
-              <Listing />
-            </section>
-            <section className="map-box-container col-5 d-none d-lg-block">
-              <Map />
-            </section>
-          </div>
-        </div>
+        <Switch>
+          {routes.map(
+            ({ component: Component, ...rest }): JSX.Element => (
+              <Route
+                key={rest.path}
+                {...rest}
+                render={() => (Component ? <Component /> : null)}
+              />
+            )
+          )}
+        </Switch>
       </main>
     </BrowserRouter>
   );

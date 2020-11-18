@@ -1,7 +1,7 @@
 .navbar {
   /* =============== Variables =============== */
   $navbar-background-color-primary: $white;
-  $navbar-color-primary: $color-dove-gray;
+  $navbar-color-primary: $color-limed-spruce;
   $navbar-accent-color-primary: $color-melrose;
   $navbar-accent-color-secondary: $color-mine-shaft;
 
@@ -19,6 +19,7 @@
       $color: $navbar-accent-color-secondary,
       $amount: $navbar-box-shadow-color-transparentize-amount
     );
+
   font-size: $navbar-font-size;
 
   &__panel {
@@ -93,10 +94,11 @@
   &__subpanel {
     background-color: $navbar-background-color-primary;
 
+    width: 100%;
+
     z-index: 9999;
 
     position: absolute;
-    top: $navbar-height;
 
     // State
     &--is-extended {

@@ -6,6 +6,9 @@
 
   $listing-accent-color-primary-transparentize-amount: 0.7;
 
+  $radial-gradient-color-stop-1: 70%;
+  $radial-gradient-color-stop-2: 69%;
+
   $header-height: 40px;
   $header-margin-B: 10px;
   $link-text-wrapper-before-after-size: 20px;
@@ -26,13 +29,20 @@
     align-items: center;
 
     height: $header-height;
+    width: 100%;
 
     padding-left: 40px;
     margin-bottom: $header-margin-B;
+
+    @media only screen and (max-width: 575px) {
+      padding-left: $link-text-wrapper-before-after-size;
+    }
   }
 
   &__main {
     height: calc(100% - #{$header-height + $header-margin-B});
+
+    padding-right: 5px;
   }
 
   &__link-text-wrapper {
@@ -71,6 +81,7 @@
 
     border-radius: 20px 20px 0px 0px;
 
+    text-transform: capitalize;
     text-decoration: none;
     font-weight: 500;
 
@@ -84,16 +95,16 @@
         &:before {
           background-image: radial-gradient(
             circle at left top,
-            transparent 70%,
-            $listing-background-color-primary 69%
+            transparent $radial-gradient-color-stop-1,
+            $listing-background-color-primary $radial-gradient-color-stop-2
           );
         }
 
         &:after {
           background-image: radial-gradient(
             circle at right top,
-            transparent 70%,
-            $listing-background-color-primary 69%
+            transparent $radial-gradient-color-stop-1,
+            $listing-background-color-primary $radial-gradient-color-stop-2
           );
         }
       }
@@ -110,24 +121,24 @@
         &:before {
           background-image: radial-gradient(
             circle at left top,
-            transparent 70%,
+            transparent $radial-gradient-color-stop-1,
             transparentize(
                 $listing-accent-color-primary,
                 $listing-accent-color-primary-transparentize-amount
               )
-              69%
+              $radial-gradient-color-stop-2
           );
         }
 
         &:after {
           background-image: radial-gradient(
             circle at right top,
-            transparent 70%,
+            transparent $radial-gradient-color-stop-1,
             transparentize(
                 $listing-accent-color-primary,
                 $listing-accent-color-primary-transparentize-amount
               )
-              69%
+              $radial-gradient-color-stop-2
           );
         }
       }
