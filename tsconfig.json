@@ -6,7 +6,8 @@
     "rootDir": "server",
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2020.Promise"]
   },
   "include": ["server/**/*"],
   "exclude": ["server/ts/*.ts", "node_modules"]

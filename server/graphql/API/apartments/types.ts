@@ -11,6 +11,7 @@ export const typeDefs = `
 
   type Mutation {
     createApartmentOffer(apartment: ApartmentInput!): Apartment!
+    uploadFiles(files: [Upload!]): Boolean!
   }
 
   input ApartmentInput {

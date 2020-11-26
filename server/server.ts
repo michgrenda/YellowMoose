@@ -1,9 +1,10 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
-import { buildSchema } from "graphql";
 import chalkColors from "./config/chalk/variables";
 import connectDB from "./config/db";
 import { schema } from "./graphql/API/Schema";
+import { graphqlUploadExpress } from "graphql-upload";
+import cors from "cors";
 
 // Connect database
 connectDB();
@@ -12,25 +13,15 @@ const app = express();
 
 const PORT: string | number = process.env.PORT || 4000;
 
-// // Construct a schema, using GraphQL schema language
-// const schema = buildSchema(`
-//   type Query {
-//     hello: String
-//   }
-// `);
+app.use(cors());
 
-// // The root provides a resolver function for each API endpoint
-// const root = {
-//   hello: () => {
-//     return "Hello world!";
-//   },
-// };
+app.use("/uploads", express.static("uploads"));
 
 app.use(
   "/graphql",
+  graphqlUploadExpress({ maxFileSize: 1000000 * 5, maxFiles: 10 }),
   graphqlHTTP({
     schema: schema,
-    // rootValue: root,
     graphiql: true,
   })
 );
