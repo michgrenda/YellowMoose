@@ -2,25 +2,48 @@
     ============================================================================================== */
 @import "./vendors/_bootstrap";
 @import "./vendors/sanitize";
+@import "./vendors/react-multi-carousel";
 
 /* Abstracts
     ============================================================================================== */
 @import "./abstracts/variables";
+@import "./abstracts//placeholders";
+
+@import "./utils";
 
 /* Components
     ============================================================================================== */
+@import "./components/TextInput";
+@import "./components/RadioInput";
+@import "./components/CheckboxInput";
+@import "./components/SelectInput";
+@import "./components/FileInput";
+@import "./components/TextArea";
+
 // Layouts
 @import "./components/layouts/Navbar";
 @import "./components/layouts/Searchbar";
 
-/* Listing
-    ============================================================================================== */
+// Listing
 @import "./components/Listing/Listing";
 @import "./components/Listing/SingleResult";
 
-/* Map
-    ============================================================================================== */
+// Map
 @import "./components/Map/Map";
+
+// Form
+@import "./components/form/DescriptionData";
+@import "./components/form/Details";
+@import "./components/form/ContactData";
+@import "./components/form/Location";
+@import "./components/form/Photo";
+@import "./components/form/BaseParameters";
+@import "./components/form/TypesBox";
+@import "./components/form/TransactionBox";
+
+/* Pages
+    ============================================================================================== */
+@import "./pages/FormPage";
 
 @import "./App";
 

@@ -8,12 +8,16 @@ const ListingPage: React.FC = () => {
     <section className="listing-page">
       <div className="container-fluid">
         <div className="row">
-          <section className="listing-box-container col-12 col-lg-7">
-            <ListingContainer />
-          </section>
-          <section className="map-box-container col-5 d-none d-lg-block">
-            <MapContainer />
-          </section>
+          <div className="col-12 col-lg-7">
+            <section className="listing-box-container">
+              <ListingContainer />
+            </section>
+          </div>
+          <div className="col-5">
+            <section className="map-box-container d-none d-lg-block">
+              <MapContainer />
+            </section>
+          </div>
         </div>
       </div>
     </section>

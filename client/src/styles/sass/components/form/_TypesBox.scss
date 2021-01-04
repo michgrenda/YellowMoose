@@ -1,0 +1,50 @@
+.types-box {
+  /* =============== Variables =============== */
+  $types-box-color-primary: $color-casal;
+  $types-box-color-secondary: $color-silver-chalice-68;
+  /* ===============    End    =============== */
+  $root: &;
+  $mixRoot: ".radio-input";
+
+  @extend %fieldset-reset;
+
+  // Mix
+  &__radio-input {
+    color: $types-box-color-primary;
+
+    #{$mixRoot}__label {
+      height: 157px;
+
+      padding-top: 110px;
+    }
+  }
+
+  // Mix
+  &__radio-input#{$mixRoot} {
+    // State
+    &--is-selected {
+      font-weight: 500;
+    }
+
+    // State
+    &--is-not-selected {
+      #{$mixRoot}__label {
+        &:hover,
+        &.focus-visible {
+          @extend %primary-box-hover;
+
+          color: $types-box-color-primary;
+        }
+      }
+    }
+
+    // State
+    &--is-disabled {
+      color: $types-box-color-secondary;
+    }
+  }
+
+  &__option {
+    @extend %primary-box;
+  }
+}

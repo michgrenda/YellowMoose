@@ -7,6 +7,7 @@ import Navbar from "./components/layouts/Navbar";
 import Searchbar from "./components/layouts/Searchbar";
 // Pages
 import ListingPage from "./pages/ListingPage";
+import FormPage from "./pages/FormPage";
 
 // Interfaces
 export interface Routes {
@@ -20,7 +21,7 @@ const routes: Routes[] = [
   {
     path: "/",
     exact: false,
-    component: ListingPage,
+    component: FormPage,
   },
 ];
 
@@ -36,7 +37,7 @@ const App: React.FC = () => {
     <ApolloProvider client={client}>
       <BrowserRouter>
         <Navbar />
-        <Searchbar />
+        {/* <Searchbar /> */}
 
         <main className="main">
           <Switch>

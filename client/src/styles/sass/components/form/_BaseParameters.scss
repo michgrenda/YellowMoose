@@ -1,0 +1,29 @@
+.base-parameters {
+  $root: &;
+
+  @extend %fieldset-reset;
+  @extend %primary-box;
+  @extend %primary-box-fieldset;
+
+  font-size: 14px;
+
+  &__title-headline {
+    @extend %fieldset-title-headline;
+  }
+
+  // Mix
+  &__text-input,
+  // Mix
+  &__checkbox-input,
+  // Mix
+  &__multi-inputs,
+  // Mix
+  &__select-input-helper {
+    @extend %primary-input-margin-bottom;
+  }
+
+  // Mix
+  &__checkbox-input {
+    font-size: inherit;
+  }
+}

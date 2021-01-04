@@ -16,6 +16,8 @@ const PORT: string | number = process.env.PORT || 4000;
 app.use(cors());
 
 app.use("/uploads", express.static("uploads"));
+// TEMPORARY
+app.use("/images", express.static("images"));
 
 app.use(
   "/graphql",

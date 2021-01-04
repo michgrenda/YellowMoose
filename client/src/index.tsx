@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
+// Modal
+import Modal from "react-modal";
 // Components
 import App from "./App";
 // Styles
@@ -14,6 +16,8 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+Modal.setAppElement("#root");
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

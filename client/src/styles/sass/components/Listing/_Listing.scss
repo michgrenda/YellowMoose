@@ -1,7 +1,7 @@
 .listing {
   /* =============== Variables =============== */
   $listing-background-color-primary: $color-aqua-haze;
-  $listing-color-primary: $color-silver-chalice;
+  $listing-color-primary: $color-silver-chalice-70;
   $listing-accent-color-primary: $color-melrose;
 
   $listing-accent-color-primary-transparentize-amount: 0.7;
@@ -113,8 +113,8 @@
     &.focus-visible:not(&--is-active),
     &:hover:not(&--is-active) {
       background-color: transparentize(
-        $listing-accent-color-primary,
-        $listing-accent-color-primary-transparentize-amount
+        $color: $listing-accent-color-primary,
+        $amount: $listing-accent-color-primary-transparentize-amount
       );
 
       #{$root}__link-text-wrapper {
@@ -123,8 +123,8 @@
             circle at left top,
             transparent $radial-gradient-color-stop-1,
             transparentize(
-                $listing-accent-color-primary,
-                $listing-accent-color-primary-transparentize-amount
+                $color: $listing-accent-color-primary,
+                $amount: $listing-accent-color-primary-transparentize-amount
               )
               $radial-gradient-color-stop-2
           );
@@ -135,8 +135,8 @@
             circle at right top,
             transparent $radial-gradient-color-stop-1,
             transparentize(
-                $listing-accent-color-primary,
-                $listing-accent-color-primary-transparentize-amount
+                $color: $listing-accent-color-primary,
+                $amount: $listing-accent-color-primary-transparentize-amount
               )
               $radial-gradient-color-stop-2
           );

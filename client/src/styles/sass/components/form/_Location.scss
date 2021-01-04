@@ -1,0 +1,16 @@
+.location {
+  @extend %fieldset-reset;
+  @extend %primary-box;
+  @extend %primary-box-fieldset;
+
+  &__title-headline {
+    @extend %fieldset-title-headline;
+  }
+
+  // Mix
+  &__text-input,
+  // Mix
+  &__select-input-helper {
+    @extend %primary-input-margin-bottom;
+  }
+}

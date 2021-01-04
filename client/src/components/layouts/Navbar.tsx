@@ -24,7 +24,7 @@ const routes: Routes[] = [
         title: "",
         options: [
           {
-            path: "/apartments",
+            path: "/flats",
             text: "mieszkanie",
           },
           {
@@ -55,7 +55,7 @@ const routes: Routes[] = [
             text: "pokój",
           },
           {
-            path: "/for-rent/apartments",
+            path: "/for-rent/flats",
             text: "mieszkanie",
           },
           {
@@ -80,7 +80,7 @@ const routes: Routes[] = [
             text: "pokój",
           },
           {
-            path: "/form/apartments",
+            path: "/form/flats",
             text: "mieszkanie",
           },
           {
@@ -105,44 +105,16 @@ const Navbar: React.FC = () => {
   // States
   // [navbar__sublist-wrapper , navbar__item--is-hovered]
   const [subpanelElements, setSubpanelElements] = useState<
-    [HTMLElement, HTMLElement] | null
-  >(null);
-
+    [HTMLElement, HTMLElement]
+  >(null!);
   // References
-  const subpanel = useRef<HTMLDivElement | null>(null);
+  const subpanelRef = useRef<HTMLDivElement>(null!);
 
   // Handlers
   // -------------------------------------------------------------------
   // Open corresponding subpanel
-  const handleLinkMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const pathname: string | null =
-      e.currentTarget.dataset.path || e.currentTarget.getAttribute("path");
-
-    if (subpanel && subpanel.current) {
-      subpanel.current.classList.add("navbar__subpanel--is-extended");
-
-      const subpanelChildren = Array.from(
-        subpanel.current.children
-      ) as HTMLElement[];
-
-      const currentSublistWrapper = subpanelChildren.find((sublistWrapper) => {
-        const name: string | null =
-          sublistWrapper.dataset.name || sublistWrapper.getAttribute("name");
-
-        if (pathname && name) return name === pathname;
-        return false;
-      });
-
-      const parentElement = e.currentTarget.parentElement;
-
-      if (currentSublistWrapper && parentElement) {
-        parentElement.classList.add("navbar__item--is-hovered");
-
-        currentSublistWrapper.style.display = "block";
-
-        setSubpanelElements([currentSublistWrapper, parentElement]);
-      }
-    }
+  const handleLinkMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+    openSubpanel(e);
   };
 
   const handleLinkMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
@@ -157,44 +129,74 @@ const Navbar: React.FC = () => {
   // -------------------------------------------------------------------
   // Close subpanel
   const closeSubpanel = (e: React.MouseEvent<HTMLElement>) => {
-    if (subpanel && subpanel.current) {
+    const subpanel = subpanelRef.current;
+    if (subpanel) {
       if (
         !(
           e.relatedTarget instanceof HTMLElement &&
-          subpanel.current.contains(e.relatedTarget)
+          subpanel.contains(e.relatedTarget)
         )
       ) {
-        subpanel.current.classList.remove("navbar__subpanel--is-extended");
-
         if (subpanelElements) {
-          subpanelElements[0].style.display = "none";
+          // Remove indicator
           subpanelElements[1].classList.remove("navbar__item--is-hovered");
+          // Close subpanel
+          subpanel.classList.remove("navbar__subpanel--is-extended");
+          subpanelElements[0].style.display = "none";
         }
       }
     }
   };
 
-  const routesList = routes.map(
-    (route: Routes): JSX.Element => (
-      <li
-        className="navbar__item"
-        key={route.path}
-        onMouseLeave={handleLinkMouseLeave}
-      >
-        <NavLink
-          className="navbar__link"
-          activeClassName="navbar__link--is-active"
-          to={route.path}
-          data-path={route.path}
-          onMouseEnter={handleLinkMouseEnter}
-        >
-          {route.text}
-        </NavLink>
-      </li>
-    )
-  );
+  const openSubpanel = (e: React.MouseEvent<HTMLElement>) => {
+    const element = e.currentTarget;
+    const subpanel = subpanelRef.current;
 
-  const sublists = routes.map((route: Routes): JSX.Element | undefined => {
+    const pathname = element.dataset.path || element.getAttribute("path");
+
+    if (subpanel) {
+      const parentElement = element.parentElement;
+      const subpanelChildren = Array.from(subpanel.children) as HTMLElement[];
+      const currentSublistWrapper = subpanelChildren.find((sublistWrapper) => {
+        const name =
+          sublistWrapper.dataset.name || sublistWrapper.getAttribute("name");
+
+        if (pathname && name) return name === pathname;
+
+        return false;
+      });
+
+      if (currentSublistWrapper && parentElement) {
+        // Add indicator
+        parentElement.classList.add("navbar__item--is-hovered");
+        // Open subpanel
+        subpanel.classList.add("navbar__subpanel--is-extended");
+        currentSublistWrapper.style.display = "block";
+
+        setSubpanelElements([currentSublistWrapper, parentElement]);
+      }
+    }
+  };
+
+  const routesList = routes.map((route) => (
+    <li
+      className="navbar__item"
+      key={route.path}
+      onMouseLeave={handleLinkMouseLeave}
+    >
+      <NavLink
+        className="navbar__link"
+        activeClassName="navbar__link--is-active"
+        to={route.path}
+        data-path={route.path}
+        onMouseEnter={handleLinkMouseEnter}
+      >
+        {route.text}
+      </NavLink>
+    </li>
+  ));
+
+  const sublists = routes.map((route) => {
     return (
       route.sublist && (
         <div
@@ -204,43 +206,27 @@ const Navbar: React.FC = () => {
           data-name={route.path}
         >
           <div className="row">
-            {route.sublist.map(
-              (
-                subitem: {
-                  title: string;
-                  options: {
-                    path: string;
-                    text: string;
-                  }[];
-                },
-                index
-              ): JSX.Element => (
-                <div className="col-12 col-sm-6 col-md-3" key={index}>
-                  <div className="navbar__sublist">
-                    {subitem.title && (
-                      <h3 className="navbar__sublist-title">{subitem.title}</h3>
-                    )}
-                    <ul className="navbar__sublist-options">
-                      {subitem.options.map(
-                        (option: {
-                          path: string;
-                          text: string;
-                        }): JSX.Element => (
-                          <li className="navbar__subitem" key={option.path}>
-                            <NavLink
-                              className="navbar__link navbar__link--subpanel"
-                              to={option.path}
-                            >
-                              {option.text}
-                            </NavLink>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </div>
+            {route.sublist.map((subitem, index) => (
+              <div className="col-12 col-sm-6 col-md-3" key={index}>
+                <div className="navbar__sublist">
+                  {subitem.title && (
+                    <h3 className="navbar__sublist-title">{subitem.title}</h3>
+                  )}
+                  <ul className="navbar__sublist-options">
+                    {subitem.options.map((option) => (
+                      <li className="navbar__subitem" key={option.path}>
+                        <NavLink
+                          className="navbar__link navbar__link--subpanel"
+                          to={option.path}
+                        >
+                          {option.text}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              )
-            )}
+              </div>
+            ))}
           </div>
         </div>
       )
@@ -261,7 +247,7 @@ const Navbar: React.FC = () => {
               <div className="col-12">
                 <div
                   className="navbar__subpanel"
-                  ref={subpanel}
+                  ref={subpanelRef}
                   onMouseLeave={handleSubpanelMouseLeave}
                 >
                   {sublists}

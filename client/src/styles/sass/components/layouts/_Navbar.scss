@@ -9,7 +9,6 @@
   $navbar-box-shadow-color-transparentize-amount: 0.9;
 
   $navbar-height: 60px !global;
-  $navbar-font-size: 14px;
   /* ===============    End    =============== */
 
   background-color: $navbar-background-color-primary;
@@ -20,7 +19,7 @@
       $amount: $navbar-box-shadow-color-transparentize-amount
     );
 
-  font-size: $navbar-font-size;
+  font-size: 14px;
 
   &__panel {
     height: $navbar-height;
@@ -77,6 +76,7 @@
     &.focus-visible,
     &:hover {
       color: $navbar-accent-color-primary;
+      outline: none;
     }
 
     // State
@@ -130,7 +130,7 @@
 
   &__sublist-title {
     text-transform: capitalize;
-    font-size: $navbar-font-size;
+    font-size: inherit;
   }
 
   &__subitem {

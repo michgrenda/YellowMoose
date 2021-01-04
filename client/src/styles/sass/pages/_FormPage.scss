@@ -1,0 +1,105 @@
+.form-page {
+  background-color: $color-aqua-haze;
+  color: $color-limed-spruce;
+
+  min-height: calc(100vh - #{$navbar-height});
+
+  &__title-headline {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+// TEMPORARY
+.carousel {
+  &__list {
+    height: 100%;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+  }
+
+  &__image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 80%;
+    max-height: 100%;
+
+    padding: 0 50px;
+
+    &--center-mode {
+      margin: 0 10px;
+    }
+  }
+
+  &__image {
+    height: auto;
+    width: auto;
+    max-height: 100vh;
+    max-width: 100%;
+  }
+
+  &__button {
+    display: block;
+
+    background-color: transparentize($color: $color-black, $amount: 0.75);
+
+    min-width: 43px;
+    min-height: 43px;
+
+    border: none;
+    border-radius: 50%;
+
+    position: absolute;
+
+    cursor: pointer;
+
+    opacity: 1;
+
+    &:hover,
+    &.focus-visible {
+      background-color: transparentize($color: $color-black, $amount: 0.5);
+    }
+
+    &--right {
+      right: calc(4% + 1px);
+    }
+
+    &--left {
+      left: calc(4% + 1px);
+    }
+  }
+
+  &__icon {
+    color: $color-white;
+  }
+}
+
+.modal {
+  &__overlay {
+    background-color: transparentize($color: $color-white, $amount: 0.75);
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 1000;
+  }
+
+  &__content {
+    background-color: transparentize($color: $color-white, $amount: 0.75);
+
+    // height: 90%;
+
+    position: absolute;
+    inset: 50% auto auto 50%;
+
+    transform: translate(-50%, -50%);
+  }
+}

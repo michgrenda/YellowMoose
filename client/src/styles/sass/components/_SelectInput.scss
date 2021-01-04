@@ -1,0 +1,137 @@
+.select-input-helper {
+  font-size: 14px;
+
+  &__label {
+    @extend %primary-label;
+  }
+}
+
+.select-input-wrapper {
+  /* =============== Variables =============== */
+  $select-input-color-primary: $color-limed-spruce;
+  $select-input-color-secondary: $color-silver-chalice-70;
+  $select-input-accent-primary: $color-concrete;
+
+  $select-input-hover-color-lighten-amount: 15%;
+  /* ===============    End    =============== */
+
+  color: $select-input-color-primary;
+
+  font-size: 14px;
+
+  .select-input {
+    $root: ".select-input";
+
+    &__control,
+    &__control:hover {
+      border: 1px solid $select-input-color-secondary;
+    }
+
+    &__control {
+      $element: "#{$root}__control";
+
+      box-shadow: none;
+
+      height: 30px;
+      min-height: 30px;
+
+      border-radius: 3px;
+
+      // State
+      &--is-focused#{$element}--menu-is-open,
+      &:hover {
+        @extend %primary-input-hover;
+      }
+
+      // State
+      &--is-disabled {
+        background-color: $select-input-accent-primary;
+      }
+    }
+
+    &__value-container {
+      height: 30px;
+
+      padding: 0 10px;
+    }
+
+    &__placeholder,
+    &__single-value {
+      margin: 0;
+    }
+
+    &__placeholder {
+      color: $select-input-color-secondary;
+    }
+
+    &__indicator-separator {
+      background-color: $select-input-color-secondary;
+    }
+
+    &__indicators {
+      height: 30px;
+    }
+
+    &__indicator {
+      color: $select-input-color-primary;
+
+      padding: 0 5px;
+
+      &:hover {
+        color: darken(
+          $color: $select-input-color-primary,
+          $amount: $select-input-hover-color-lighten-amount
+        );
+      }
+    }
+
+    &__input {
+      color: $select-input-color-primary;
+
+      input {
+        font-family: inherit;
+      }
+    }
+
+    &__menu-notice {
+      &--no-options {
+        color: $select-input-color-secondary;
+      }
+    }
+
+    &__menu {
+      @extend %primary-input-hover;
+
+      border: 1px solid $select-input-color-secondary;
+      border-radius: 3px;
+    }
+
+    &__option {
+      padding: 4px 12px;
+
+      &:active {
+        background-color: transparentize(
+          $color: $select-input-color-secondary,
+          $amount: 0.5
+        );
+      }
+
+      // State
+      &--is-focused {
+        background-color: transparentize(
+          $color: $select-input-color-secondary,
+          $amount: 0.9
+        );
+      }
+
+      // State
+      &--is-selected,
+      &--is-selected:active {
+        background-color: transparentize(
+          $color: $select-input-color-secondary,
+          $amount: 0.1
+        );
+      }
+    }
+  }
+}
