@@ -1,0 +1,75 @@
+.field {
+  /* =============== Variables =============== */
+  $field-color-primary: $color-limed-spruce;
+  $field-color-secondary: $color-silver-chalice-70;
+  $field-accent-primary: $color-concrete;
+  /* ===============    End    =============== */
+  $root: &;
+
+  color: $field-color-primary;
+
+  font-size: inherit;
+
+  // State
+  &--is-disabled {
+    #{$root}__input {
+      background-color: $field-accent-primary;
+
+      &.focus-visible,
+      &:hover,
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  &--extra-small {
+    #{$root}__input {
+      width: 55px;
+    }
+  }
+
+  &--small {
+    #{$root}__input {
+      width: 85px;
+    }
+  }
+
+  &--medium {
+    #{$root}__input {
+      width: 225px;
+    }
+  }
+
+  &--large {
+    #{$root}__input {
+      width: 445px;
+    }
+  }
+
+  &__input-wrapper {
+    display: flex;
+  }
+
+  &__input {
+    color: inherit;
+    background-color: transparent;
+
+    height: 30px;
+
+    border: 1px solid $field-color-secondary;
+    border-radius: 3px;
+
+    padding: 0 10px;
+
+    font-family: inherit;
+    font-size: inherit;
+
+    &.focus-visible,
+    &:hover,
+    &:focus {
+      @extend %primary-input-hover;
+      outline: none !important;
+    }
+  }
+}

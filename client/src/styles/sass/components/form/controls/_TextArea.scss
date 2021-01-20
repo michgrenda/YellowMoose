@@ -1,0 +1,78 @@
+.text-area {
+  /* =============== Variables =============== */
+  $text-area-color-primary: $color-limed-spruce;
+  $text-area-color-secondary: $color-silver-chalice-70;
+  $text-area-accent-primary: $color-concrete;
+  /* ===============    End    =============== */
+  $root: &;
+
+  color: $text-area-color-primary;
+
+  font-size: inherit;
+
+  // State
+  &--is-disabled {
+    #{$root}__input {
+      background-color: $text-area-accent-primary;
+
+      &.focus-visible,
+      &:hover,
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  &--extra-small {
+    #{$root}__input {
+      width: 55px;
+    }
+  }
+
+  &--small {
+    #{$root}__input {
+      width: 85px;
+    }
+  }
+
+  &--medium {
+    #{$root}__input {
+      width: 225px;
+    }
+  }
+
+  &--large {
+    #{$root}__input {
+      width: 445px;
+    }
+  }
+
+  &__input-wrapper {
+    display: flex;
+  }
+
+  &__input {
+    color: inherit;
+    background-color: transparent;
+
+    height: 200px;
+
+    resize: none;
+    overflow: auto;
+
+    border: 1px solid $text-area-color-secondary;
+    border-radius: 3px;
+
+    padding: 5px 10px;
+
+    font-family: inherit;
+    font-size: inherit;
+
+    &.focus-visible,
+    &:focus,
+    &:hover {
+      @extend %primary-input-hover;
+      outline: none !important;
+    }
+  }
+}

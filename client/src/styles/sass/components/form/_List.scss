@@ -1,0 +1,40 @@
+.fields-list {
+  $root: &;
+
+  &--show-separator {
+    #{$root}__fields {
+      > *:not(:first-child) {
+        margin-left: 0;
+      }
+    }
+  }
+
+  &__fields {
+    display: flex;
+    align-items: center;
+
+    > *:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+}
+
+.labels-list {
+  $root: &;
+
+  &--show-separator {
+    #{$root}__labels {
+      > *:not(:first-child) {
+        margin-left: 0;
+      }
+    }
+  }
+
+  &__labels {
+    display: flex;
+
+    > *:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+}

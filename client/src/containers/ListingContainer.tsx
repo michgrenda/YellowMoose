@@ -2,12 +2,10 @@ import React from "react";
 // Components
 import Listing from "../components/Listing/Listing";
 
-const ListingContainer: React.FC = () => {
+export const ListingContainer = () => {
   return (
     <>
       <Listing />
     </>
   );
 };
-
-export default ListingContainer;

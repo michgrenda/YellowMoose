@@ -1,0 +1,125 @@
+.select-field-wrapper {
+  /* =============== Variables =============== */
+  $select-field-color-primary: $color-limed-spruce;
+  $select-field-color-secondary: $color-silver-chalice-70;
+  $select-field-accent-primary: $color-concrete;
+
+  // Overrride
+  $select-field-border: 1px solid $select-field-color-secondary;
+  /* ===============    End    =============== */
+
+  color: $select-field-color-primary;
+
+  font-size: 14px;
+
+  .select-field {
+    $root: ".select-field";
+
+    &__control,
+    &__value-container,
+    &__indicators {
+      height: 30px;
+    }
+
+    &__control {
+      $element: "#{$root}__control";
+
+      min-height: 30px;
+
+      border: $select-field-border;
+      border-radius: 3px;
+
+      // State
+      &--is-focused,
+      // State
+      &--is-focused#{$element}--menu-is-open,
+      &:hover {
+        @extend %primary-input-hover;
+
+        border: $select-field-border;
+      }
+
+      // State
+      &--is-disabled {
+        background-color: $select-field-accent-primary;
+      }
+    }
+
+    &__value-container {
+      padding: 0 10px;
+    }
+
+    &__placeholder,
+    &__single-value {
+      margin: 0;
+    }
+
+    &__placeholder {
+      color: $select-field-color-secondary;
+    }
+
+    &__indicator-separator {
+      background-color: $select-field-color-secondary;
+    }
+
+    &__indicator {
+      color: $select-field-color-primary;
+
+      padding: 0 5px;
+
+      &:hover {
+        color: darken($color: $select-field-color-primary, $amount: 15%);
+      }
+    }
+
+    &__input {
+      color: $select-field-color-primary;
+
+      input {
+        font-family: inherit;
+        font-size: inherit;
+      }
+    }
+
+    &__menu-notice {
+      &--no-options {
+        color: $select-field-color-secondary;
+      }
+    }
+
+    &__menu {
+      @extend %primary-input-hover;
+
+      border: 1px solid $select-field-color-secondary;
+      border-radius: 3px;
+    }
+
+    &__option {
+      padding: 4px 12px;
+
+      &:active {
+        background-color: transparentize(
+          $color: $select-field-color-secondary,
+          $amount: 0.5
+        );
+      }
+
+      // State
+      &--is-focused {
+        background-color: transparentize(
+          $color: $select-field-color-secondary,
+          $amount: 0.9
+        );
+      }
+
+      // State
+      &--is-selected,
+      &--is-selected:active {
+        background-color: transparentize(
+          $color: $select-field-color-secondary,
+          $amount: 0.1
+        );
+      }
+    }
+  }
+}

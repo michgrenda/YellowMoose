@@ -11,7 +11,7 @@ export type Props = {
   };
 };
 
-const SingleResult: React.FC<Props> = ({ singleData, ...rest }) => {
+const SingleResult = ({ singleData, ...rest }: Props) => {
   return (
     <div className="single-result">
       <div className="container-fluid">

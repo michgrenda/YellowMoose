@@ -1,0 +1,70 @@
+.file-field-wrapper {
+  display: flex;
+}
+
+.file-field {
+  /* =============== Variables =============== */
+  $file-field-background-color-primary: $color-aqua-haze;
+  $file-field-color-primary: $color-limed-spruce;
+  $file-field-color-secondary: $color-silver-chalice-70;
+  $file-field-accent-primary: $color-concrete;
+  $file-field-accent-secondary: $color-spring-green;
+  $file-field-accent-tertiary: $color-torch-red;
+  /* ===============    End    =============== */
+
+  background-color: $file-field-background-color-primary;
+  color: $file-field-color-primary;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: 130px;
+  width: 150px;
+
+  border: 1px dashed $file-field-color-primary;
+  border-radius: 3px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  // State
+  &--is-drag-accept {
+    color: $file-field-accent-secondary;
+    border-color: $file-field-accent-secondary;
+  }
+
+  // State
+  &--is-drag-reject {
+    color: $file-field-accent-tertiary;
+    border-color: $file-field-accent-tertiary;
+  }
+
+  // State
+  &--is-disabled {
+    background-color: $file-field-accent-primary;
+    color: $file-field-color-secondary;
+    border-color: $file-field-color-secondary;
+
+    cursor: not-allowed;
+  }
+
+  &__label {
+    margin-top: 0;
+    margin-bottom: 0;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  &__accepted-files {
+    font-size: 10px;
+  }
+
+  &__errors-container {
+    margin-left: 5px;
+  }
+}

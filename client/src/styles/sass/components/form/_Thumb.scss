@@ -1,0 +1,68 @@
+.thumb {
+  /* =============== Variables =============== */
+  $thumb-color-primary: $color-white;
+  $thumb-color-secondary: $color-silver-chalice-70;
+  /* ===============    End    =============== */
+
+  background-color: $thumb-color-primary;
+
+  height: 100px;
+  width: 100px;
+
+  overflow: hidden;
+
+  border: 1px solid $thumb-color-secondary;
+  border-radius: 2px;
+
+  padding: 4px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+
+  position: relative;
+
+  &__buttons-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    z-index: 1;
+  }
+
+  &__button {
+    @extend %primary-button;
+
+    display: block;
+
+    border: none;
+
+    padding: 2px;
+    margin-bottom: 1px;
+
+    cursor: pointer;
+
+    &.focus-visible,
+    &:hover {
+      @extend %primary-button-hover;
+    }
+  }
+
+  &__image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+  }
+
+  &__icon {
+    color: $thumb-color-primary;
+  }
+
+  &__image {
+    display: block;
+
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}

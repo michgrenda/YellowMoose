@@ -1,0 +1,11 @@
+.offer-form {
+  &__submit-button-wrapper {
+    display: flex;
+  }
+
+  // Mix
+  &__button {
+    margin-bottom: 15px;
+    margin-left: auto;
+  }
+}

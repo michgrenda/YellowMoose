@@ -1,6 +1,6 @@
 import React from "react";
 
-const Searchbar: React.FC = () => {
+const Searchbar = () => {
   return <section className="searchbar"></section>;
 };
 

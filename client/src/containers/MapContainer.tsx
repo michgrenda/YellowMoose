@@ -2,12 +2,10 @@ import React from "react";
 // Components
 import Map from "../components/Map/Map";
 
-const MapContainer: React.FC = () => {
+export const MapContainer = () => {
   return (
     <>
       <Map />
     </>
   );
 };
-
-export default MapContainer;

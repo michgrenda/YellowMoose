@@ -1,0 +1,156 @@
+.control {
+  /* =============== Variables =============== */
+  $control-color-primary: $color-limed-spruce;
+  $control-color-secondary: $color-silver-chalice-70;
+  $control-accent-primary: $color-concrete;
+  /* ===============    End    =============== */
+  $root: &;
+
+  color: $control-color-primary;
+
+  font-size: inherit;
+
+  // State
+  &--is-checkbox {
+    display: inline-block;
+  }
+
+  // State
+  &--is-selected {
+    #{$root}__dot {
+      display: block;
+    }
+  }
+
+  // State
+  &--is-selected#{$root}--is-radio {
+    #{$root}__label {
+      cursor: default;
+    }
+  }
+
+  // State
+  &--is-radio {
+    #{$root}__dot-wrapper,
+    #{$root}__dot {
+      border-radius: 50%;
+    }
+  }
+
+  // State
+  &--is-checkbox {
+    #{$root}__dot-wrapper,
+    #{$root}__dot {
+      border-radius: 3px;
+    }
+  }
+
+  // State
+  &--is-not-selected {
+    #{$root}__label {
+      &:hover,
+      &.focus-visible {
+        color: lighten($color: $control-color-primary, $amount: 15%);
+      }
+    }
+  }
+
+  // State
+  &--is-disabled {
+    color: $control-color-secondary;
+
+    #{$root}__dot-wrapper {
+      border-color: $control-color-secondary;
+      background-color: $control-accent-primary;
+    }
+
+    #{$root}__label {
+      cursor: not-allowed;
+    }
+  }
+
+  &--image {
+    text-align: center;
+
+    #{$root}__dot-wrapper {
+      display: none;
+    }
+
+    #{$root}__label-text {
+      display: block;
+
+      width: 100%;
+
+      margin-left: 0;
+    }
+  }
+
+  &--display-block {
+    display: block;
+  }
+
+  &--light-300 {
+    font-weight: 300;
+  }
+
+  &--medium-500 {
+    font-weight: 500;
+  }
+
+  &--regular-400 {
+    font-weight: 400;
+  }
+
+  &--bold-700 {
+    font-weight: 700;
+  }
+
+  &__input {
+    display: none;
+  }
+
+  &__dot-wrapper {
+    width: 16px;
+    height: 16px;
+
+    border: 1px solid $control-color-primary;
+
+    position: relative;
+  }
+
+  &__dot {
+    display: none;
+
+    background-color: $control-color-primary;
+
+    height: 8px;
+    width: 8px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+
+    cursor: pointer;
+  }
+
+  &__label-text {
+    display: block;
+
+    margin-left: 5px;
+
+    white-space: nowrap;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+}

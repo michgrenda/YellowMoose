@@ -1,0 +1,12 @@
+.controls-list {
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__col {
+    min-width: 180px;
+
+    margin-right: 50px;
+  }
+}

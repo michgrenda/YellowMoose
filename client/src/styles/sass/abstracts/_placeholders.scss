@@ -1,9 +1,4 @@
-%fieldset-reset {
-  border: none;
-
-  padding: 0;
-}
-
+// Form
 %primary-box {
   background-color: $color-white;
   box-shadow: 0 5px 6px 0
@@ -17,31 +12,6 @@
 %primary-box-hover {
   box-shadow: 0 5px 10px 2px
     transparentize($color: $color-mine-shaft, $amount: 0.85);
-}
-
-%primary-box-fieldset {
-  padding: 10px 20px;
-}
-
-%fieldset-title-headline {
-  margin: 0 0 20px;
-
-  font-size: 20px;
-  font-weight: 500;
-}
-
-%primary-label {
-  display: inline-block;
-
-  margin-bottom: 5px;
-
-  &::first-letter {
-    text-transform: uppercase;
-  }
-}
-
-%primary-input-margin-bottom {
-  margin-bottom: 10px;
 }
 
 %primary-input-hover {

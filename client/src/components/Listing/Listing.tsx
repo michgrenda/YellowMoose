@@ -36,30 +36,32 @@ const routes: Routes[] = [
   },
 ];
 
-const Listing: React.FC = () => {
+const Listing = () => {
   // TEMPORARY
   const results = data.map((singleData, index) => (
     <SingleResult singleData={singleData} key={index} />
   ));
 
   return (
-    <section className="listing">
+    <section className="listing-wrapper">
       <div className="container-fluid">
-        <div className="listing__header">
-          {routes.map((route) => (
-            <NavLink
-              to={route.path}
-              className="listing__link"
-              activeClassName="listing__link--is-active"
-              key={route.path}
-            >
-              <div className="listing__link-text-wrapper">
-                <div className="listing__link-text">{route.text}</div>
-              </div>
-            </NavLink>
-          ))}
+        <div className="listing">
+          <div className="listing__header">
+            {routes.map((route) => (
+              <NavLink
+                to={route.path}
+                className="listing__link"
+                activeClassName="listing__link--is-active"
+                key={route.path}
+              >
+                <div className="listing__link-text-wrapper">
+                  <div className="listing__link-text">{route.text}</div>
+                </div>
+              </NavLink>
+            ))}
+          </div>
+          <div className="listing__main">{results}</div>
         </div>
-        <div className="listing__main">{results}</div>
       </div>
     </section>
   );

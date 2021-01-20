@@ -1,0 +1,11 @@
+.label {
+  display: inline-block;
+
+  margin-bottom: 5px;
+
+  font-size: inherit;
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}

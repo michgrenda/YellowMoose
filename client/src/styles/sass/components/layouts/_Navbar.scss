@@ -1,9 +1,8 @@
 .navbar {
   /* =============== Variables =============== */
-  $navbar-background-color-primary: $white;
+  $navbar-background-color-primary: $color-white;
   $navbar-color-primary: $color-limed-spruce;
-  $navbar-accent-color-primary: $color-melrose;
-  $navbar-accent-color-secondary: $color-mine-shaft;
+  $navbar-accent-color-primary: $color-mine-shaft;
 
   $navbar-box-shadow-values: 0 2px 4px 0;
   $navbar-box-shadow-color-transparentize-amount: 0.9;
@@ -15,7 +14,7 @@
   color: $navbar-color-primary;
   box-shadow: $navbar-box-shadow-values
     transparentize(
-      $color: $navbar-accent-color-secondary,
+      $color: $navbar-accent-color-primary,
       $amount: $navbar-box-shadow-color-transparentize-amount
     );
 
@@ -54,7 +53,7 @@
 
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-bottom: 8px solid $navbar-accent-color-primary;
+        border-bottom: 8px solid $navbar-color-primary;
 
         position: absolute;
         bottom: 0;
@@ -75,7 +74,7 @@
 
     &.focus-visible,
     &:hover {
-      color: $navbar-accent-color-primary;
+      color: lighten($color: $navbar-color-primary, $amount: 15%);
       outline: none;
     }
 
@@ -104,13 +103,13 @@
     &--is-extended {
       box-shadow: $navbar-box-shadow-values
         transparentize(
-          $color: $navbar-accent-color-secondary,
+          $color: $navbar-accent-color-primary,
           $amount: $navbar-box-shadow-color-transparentize-amount
         );
 
       border-top: 1px solid
         transparentize(
-          $color: $navbar-accent-color-secondary,
+          $color: $navbar-accent-color-primary,
           $amount: $navbar-box-shadow-color-transparentize-amount
         );
     }
@@ -123,7 +122,7 @@
   &__sublist-divider {
     border-top: 1px solid
       transparentize(
-        $color: $navbar-accent-color-secondary,
+        $color: $navbar-accent-color-primary,
         $amount: $navbar-box-shadow-color-transparentize-amount
       );
   }

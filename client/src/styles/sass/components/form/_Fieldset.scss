@@ -1,0 +1,173 @@
+.fieldset {
+  /* =============== Variables =============== */
+  $fieldset-background-color-primary: $color-white;
+  $fieldset-color-primary: $color-silver-chalice-70;
+  $fieldset-color-secondary: $color-casal;
+  $fieldset-color-tertiary: $color-silver-chalice-68;
+  $fieldset-accent-primary: $color-mine-shaft;
+
+  $fieldset-header-margin-B: 20px;
+  /* ===============    End    =============== */
+  $root: &;
+
+  background-color: $fieldset-background-color-primary;
+  box-shadow: 0 5px 6px 0
+    transparentize($color: $fieldset-accent-primary, $amount: 0.9);
+
+  border: none;
+  border-radius: 5px;
+
+  padding: 10px 20px;
+  margin: 0 0 15px;
+
+  // State
+  &--is-expandable {
+    #{$root}__header {
+      margin-bottom: 0;
+
+      cursor: pointer;
+    }
+
+    #{$root}__expandable-information {
+      color: $fieldset-color-primary;
+    }
+
+    #{$root}__children {
+      display: none;
+    }
+  }
+
+  // State
+  &--is-expanded {
+    #{$root}__header {
+      margin-bottom: $fieldset-header-margin-B;
+
+      cursor: pointer;
+    }
+
+    #{$root}__children {
+      display: block;
+    }
+  }
+
+  &--transaction-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 80px;
+
+    margin-bottom: 15px;
+
+    #{$root}__children {
+      display: flex;
+    }
+
+    // Mix
+    #{$root}__control {
+      margin: 0 50px;
+    }
+  }
+
+  &--types-box {
+    $mixRoot: ".control";
+
+    background-color: transparent;
+    box-shadow: none;
+
+    padding: 0;
+    margin: 0;
+
+    // Mix
+    #{$root}__control {
+      color: $fieldset-color-secondary;
+
+      margin-right: 7.5px;
+      margin-left: 7.5px;
+
+      #{$mixRoot}__label {
+        @extend %primary-box;
+
+        height: 157px;
+
+        padding-top: 110px;
+      }
+    }
+
+    // Mix
+    #{$root}__control#{$mixRoot} {
+      // State
+      &--is-selected {
+        font-weight: 500;
+      }
+
+      // State
+      &--is-not-selected {
+        #{$mixRoot}__label {
+          &:hover,
+          &.focus-visible {
+            @extend %primary-box-hover;
+
+            color: inherit;
+          }
+        }
+      }
+
+      // State
+      &--is-disabled {
+        color: $fieldset-color-tertiary;
+      }
+    }
+  }
+
+  &--photo {
+    #{$root}__title {
+      margin-bottom: 20px;
+    }
+  }
+
+  &--base-parameters,
+  &--description-data,
+  &--location,
+  &--contact-data,
+  &--photo,
+  &--details {
+    font-size: 14px;
+
+    // Mix
+    #{$root}__extended-field,
+    // Mix
+    #{$root}__control,
+    // Mix
+    #{$root}__file-field {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__header {
+    margin-bottom: $fieldset-header-margin-B;
+  }
+
+  &__title {
+    margin: 0;
+
+    font-size: 20px;
+    font-weight: 500;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  &__additional-information {
+    font-size: inherit;
+
+    margin: 0;
+  }
+}
+
+.photo {
+  &__thumbs-container {
+    display: flex;
+  }
+}

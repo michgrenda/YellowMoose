@@ -1,0 +1,26 @@
+.error {
+  /* =============== Variables =============== */
+  $error-color-primary: $color-torch-red;
+  /* ===============    End    =============== */
+
+  color: $error-color-primary;
+
+  display: flex;
+  align-items: center;
+
+  margin: 0 0 2px;
+
+  font-size: 10px;
+
+  &__icon {
+    margin-right: 2px;
+  }
+
+  &__text {
+    display: inline-block;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+}

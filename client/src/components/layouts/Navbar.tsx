@@ -101,7 +101,7 @@ const routes: Routes[] = [
   },
 ];
 
-const Navbar: React.FC = () => {
+export const Navbar = () => {
   // States
   // [navbar__sublist-wrapper , navbar__item--is-hovered]
   const [subpanelElements, setSubpanelElements] = useState<
@@ -109,21 +109,6 @@ const Navbar: React.FC = () => {
   >(null!);
   // References
   const subpanelRef = useRef<HTMLDivElement>(null!);
-
-  // Handlers
-  // -------------------------------------------------------------------
-  // Open corresponding subpanel
-  const handleLinkMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    openSubpanel(e);
-  };
-
-  const handleLinkMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    closeSubpanel(e);
-  };
-
-  const handleSubpanelMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    closeSubpanel(e);
-  };
 
   // Methods
   // -------------------------------------------------------------------
@@ -178,6 +163,22 @@ const Navbar: React.FC = () => {
     }
   };
 
+  // Handlers
+  // -------------------------------------------------------------------
+  // Open corresponding subpanel
+  const handleLinkMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+    openSubpanel(e);
+  };
+
+  const handleLinkMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    closeSubpanel(e);
+  };
+
+  const handleSubpanelMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    closeSubpanel(e);
+  };
+
+  // Variables
   const routesList = routes.map((route) => (
     <li
       className="navbar__item"
@@ -260,5 +261,3 @@ const Navbar: React.FC = () => {
     </header>
   );
 };
-
-export default Navbar;

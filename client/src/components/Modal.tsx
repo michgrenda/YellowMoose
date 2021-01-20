@@ -2,13 +2,13 @@ import React from "react";
 // Modal
 import ReactModal, { Props as ReactModalProps } from "react-modal";
 
-// Props
-interface IModalProps {
+// File interfaces
+interface ModalProps {
   children: any;
 }
 
-type Props = IModalProps & ReactModalProps;
-
+// Props and default props
+type Props = ModalProps & ReactModalProps;
 const defaultProps = {
   portalClassName: "modal",
   overlayClassName: "modal__overlay",
@@ -16,10 +16,8 @@ const defaultProps = {
   parentSelector: () => document.getElementById("modal-root") || document.body,
 };
 
-const Modal = ({ children, ...rest }: Props) => {
+export const Modal = ({ children, ...rest }: Props) => {
   return <ReactModal {...rest}>{children}</ReactModal>;
 };
 
 Modal.defaultProps = defaultProps;
-
-export default Modal;

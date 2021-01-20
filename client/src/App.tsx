@@ -3,10 +3,10 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
 // Components
-import Navbar from "./components/layouts/Navbar";
+import { Navbar } from "./components/layouts/Navbar";
 import Searchbar from "./components/layouts/Searchbar";
 // Pages
-import ListingPage from "./pages/ListingPage";
+import { ListingPage } from "./pages/ListingPage";
 import FormPage from "./pages/FormPage";
 
 // Interfaces
@@ -20,7 +20,7 @@ export interface Routes {
 const routes: Routes[] = [
   {
     path: "/",
-    exact: false,
+    exact: true,
     component: FormPage,
   },
 ];
