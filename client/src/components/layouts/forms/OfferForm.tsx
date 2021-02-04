@@ -1,12 +1,20 @@
-import React, { useState, FormHTMLAttributes, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  FormHTMLAttributes,
+} from "react";
 // Errors
 import { errorMessages } from "../../../utils/validators";
+import { scrollToElement } from "../../../utils/scroll";
 // React-hook-form
 import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 // Components
-import { Button } from "../../form/controls/Button";
+import { Button } from "../../forms/controls/Button";
+import { Wave } from "../../Wave";
 // Fieldsets
 import { BaseParameters } from "../fieldsets/BaseParameters";
 import { Location } from "../fieldsets/Location";
@@ -16,74 +24,23 @@ import { PropertyType } from "../fieldsets/PropertyType";
 import { Photo } from "../fieldsets/Photo";
 import { Details } from "../fieldsets/Details";
 import { DescriptionData } from "../fieldsets/DescriptionData";
+// Context
+import { FormTypeContext } from "../../../pages/FormPage";
 // Types
-import { OptionType } from "../../../types";
+import { TransactionType } from "../fieldsets/Transaction";
+import { PropertyTypeType } from "../fieldsets/PropertyType";
 
 // File types
-type PropertyTypeType =
-  | "flat"
-  | "house"
-  | "plot"
-  | "commercial-building"
-  | "garage"
-  | "room";
-type TransactionType = "sell" | "rent";
 type FileType = File & { preview: string; rotation: number };
 // React-hook-form
 type FormValues = {
-  title: string;
+  [index: string]: any;
 };
 
 // File interfaces
 export interface BaseParametersState {
-  title: string;
-  area: string;
-  rooms: string;
-  price: string;
-  currency: OptionType<false>;
-  negotiable: boolean;
-  isRentInPrice: OptionType<false>;
-  floor: OptionType<false>;
-  numberOfFloors: OptionType<false>;
-}
-export interface LocationState {
-  ZIPCode: string;
-  voivodeship: OptionType<false>;
-}
-export interface DescriptionDataState {
-  description: string;
-}
-export interface DetailsState {
-  constructionYear: string;
-  buildingType: OptionType<false>;
-  condition: OptionType<false>;
-  level: OptionType<false>;
-  kitchenType: OptionType<false>;
-  isBathroomWithWC: OptionType<false>;
-  insideHeight: string;
-  energyDemand: string;
-  heating: OptionType<false>;
-  parkingPlace: OptionType<false>;
-  hasBalcony: OptionType<false>;
-  hasTerrace: OptionType<false>;
-  hasElevator: OptionType<false>;
-  firstOwner: boolean;
-  vacatedFrom: string;
-  facilities: { [index: string]: boolean };
-  media: { [index: string]: boolean };
-}
-export interface ContactDataState {
-  firstname: string;
-  email: string;
-  phoneNumber: string;
-  countryCode: string;
-  ownerType: OptionType<false>;
-}
-export interface PropertyTypeState {
-  type: PropertyTypeType;
-}
-export interface TransactionState {
-  transaction: TransactionType;
+  floor: number;
+  numberOfFloors: number;
 }
 export interface PhotoState {
   files: FileType[];
@@ -93,110 +50,168 @@ export interface PhotoState {
 type Props = FormHTMLAttributes<HTMLFormElement>;
 
 // Yup
-const isRequriedAndNumber = yup
+const isNumber = yup
   .number()
-  .required(errorMessages.isRequired)
-  .transform((cv) => (isNaN(cv) ? undefined : cv));
+  .transform((cv) => (isNaN(cv) ? undefined : cv))
+  .transform((cv, ov) =>
+    ov.length ? Number(ov.replace(/ /g, "").replace(/,/, ".")) : cv
+  );
+const isRequriedAndNumber = isNumber.required(errorMessages.isRequired);
 const isRequiredAndString = yup.string().required(errorMessages.isRequired);
 
 export const OfferForm = (props: Props) => {
   // States
-  const [baseParameters, setBaseParameters] = useState<BaseParametersState>({
-    title: "",
-    area: "",
-    rooms: "",
-    price: "",
-    currency: { value: "PLN", label: "zł" },
-    negotiable: false,
-    isRentInPrice: null,
-    floor: null,
-    numberOfFloors: null,
-  });
-  const [location, setLocation] = useState<LocationState>({
-    ZIPCode: "",
-    voivodeship: null,
-  });
   const [photo, setPhoto] = useState<PhotoState>({ files: [] });
-  const [descriptionData, setDescriptionData] = useState<DescriptionDataState>({
-    description: "",
+  // To validations
+  const [baseParameters, setBaseParameters] = useState<BaseParametersState>({
+    floor: Number.MIN_SAFE_INTEGER,
+    numberOfFloors: Number.MAX_SAFE_INTEGER,
   });
-  const [details, setDetails] = useState<DetailsState>({
-    constructionYear: "",
-    buildingType: null,
-    condition: null,
-    level: null,
-    kitchenType: null,
-    isBathroomWithWC: null,
-    insideHeight: "",
-    energyDemand: "",
-    heating: null,
-    parkingPlace: null,
-    hasBalcony: null,
-    hasTerrace: null,
-    hasElevator: null,
-    firstOwner: false,
-    vacatedFrom: "",
-    facilities: {},
-    media: {},
-  });
-  const [contactData, setContactData] = useState<ContactDataState>({
-    firstname: "",
-    email: "",
-    phoneNumber: "",
-    countryCode: "48",
-    ownerType: null,
-  });
-  const [propertyType, setPropertyType] = useState<PropertyTypeState>({
-    type: "flat",
-  });
-  const [transaction, setTransaction] = useState<TransactionState>({
-    transaction: "sell",
-  });
+  // Context
+  const formType = useContext(FormTypeContext);
 
-  const _floor = useMemo(() => {
-    const value = baseParameters.floor?.value;
-
-    return value ? parseInt(value) : Number.MIN_SAFE_INTEGER;
-  }, [baseParameters.floor?.value]);
-  const _numberOfFloors = useMemo(() => {
-    const value = baseParameters.numberOfFloors?.value;
-
-    return value ? parseInt(value) : Number.MAX_SAFE_INTEGER;
-  }, [baseParameters.numberOfFloors?.value]);
-
+  // Validation
+  const {
+    floor: floorState,
+    numberOfFloors: numberOfFloorsState,
+  } = baseParameters;
+  // Resolver
   const formSchema = useMemo(
     () =>
       yup.object().shape({
-        title: isRequiredAndString,
-        area: isRequriedAndNumber,
-        rooms: isRequriedAndNumber,
+        // Base parameters
+        title: isRequiredAndString.max(
+          50,
+          "Tytuł jest za długi (maksymalnie 50 znaków)"
+        ),
+        area: isRequriedAndNumber.max(
+          99999999.99,
+          "Maksymalna wartośc to 99 999 999,99"
+        ),
+        rooms: isRequriedAndNumber.max(150, "Maksymalna wartośc to 150"),
         price: isRequriedAndNumber,
         floor: yup.object().shape({
           value: isRequriedAndNumber.max(
-            _numberOfFloors,
+            numberOfFloorsState,
             "Pole piętro nie może być większe od pola liczba pięter"
           ),
           label: isRequriedAndNumber,
         }),
         numberOfFloors: yup.object().shape({
           value: isRequriedAndNumber.min(
-            _floor,
+            floorState,
             "Pole liczba pięter nie może być mniejsze od pola piętro"
           ),
           label: isRequriedAndNumber,
         }),
+        // Description data
+        description: isRequiredAndString.max(
+          6000,
+          "Opis jest za długi (maksymalnie 6000 znaków)"
+        ),
+        // Location
+        voivodeship: yup.object().shape({
+          value: isRequiredAndString,
+          label: isRequiredAndString,
+        }),
+        // Contact data
+        firstname: isRequiredAndString.max(
+          25,
+          "Imię jest za długie (maksymalnie 25 znaków)"
+        ),
+        email: isRequiredAndString
+          .max(25, "Adres e-mail jest za długi (maksymalnie 25 znaków)")
+          .email("Nieprawidłowy adres e-mail"),
+        dialCode: isRequiredAndString
+          .max(25, "Numer kierunkowy jest za długi (maksymalnie 25 znaków)")
+          .notOneOf(["+"], errorMessages.isRequired),
+        phoneNumber: isRequiredAndString.max(
+          25,
+          "Telefon kontaktowy jest za długi (maksymalnie 25 znaków)"
+        ),
+        ownerType: yup.object().shape({
+          value: isRequiredAndString,
+          label: isRequiredAndString,
+        }),
+        // Details
+        constructionYear: isNumber
+          .min(1100, "Minimalna wartość to 1100")
+          .max(
+            new Date().getFullYear(),
+            "Maksymalny rok budowy to rok bieżący"
+          ),
+        insideHeight: isNumber.max(9999.99, "Maksymalna wartośc to 9 999,99"),
+        vacatedFrom: yup
+          .date()
+          .transform((_, ov) => {
+            const [day, month, year] = ov.split(".");
+
+            return new Date(`${year}-${month}-${day}`);
+          })
+          .typeError("Data jest nieprawidłowa"),
       }),
-    [_floor, _numberOfFloors]
+    [floorState, numberOfFloorsState]
   );
 
   // React-hook-form
-  const { register, handleSubmit, clearErrors, errors, control } = useForm({
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    clearErrors,
+    setValue,
+    watch,
+    errors,
+    control,
+    formState,
+  } = useForm({
     mode: "onBlur",
-    reValidateMode: "onBlur",
     resolver: yupResolver(formSchema),
+    shouldFocusError: false, // Inconsistent and that's why (replaced by scrollToElement)
   });
 
-  const { title, area, rooms, price, floor, numberOfFloors } = errors;
+  const values = getValues();
+  const { floor: _floor, numberOfFloors: _numberOfFloors } = values;
+
+  useEffect(() => {
+    const floor = _floor?.value || Number.MIN_SAFE_INTEGER;
+    const numberOfFloors = _numberOfFloors?.value || Number.MAX_SAFE_INTEGER;
+
+    setBaseParameters((prevState) => ({
+      ...prevState,
+      floor: floor,
+      numberOfFloors: numberOfFloors,
+    }));
+  }, [_floor, _numberOfFloors]);
+
+  useEffect(() => {
+    if (formState.submitCount)
+      scrollToElement('.offer-form [data-valid="invalid"]', -10);
+  }, [formState.submitCount]);
+
+  const {
+    // Base parameters
+    title,
+    area,
+    rooms,
+    price,
+    floor,
+    numberOfFloors,
+    // Description data
+    description,
+    // Location
+    voivodeship,
+    // Contact data
+    firstname,
+    email,
+    dialCode,
+    phoneNumber,
+    ownerType,
+    // Details
+    constructionYear,
+    insideHeight,
+    vacatedFrom,
+  } = errors;
   const baseParametersErrors = useMemo(
     () => ({
       title,
@@ -208,15 +223,25 @@ export const OfferForm = (props: Props) => {
     }),
     [title, area, rooms, price, floor, numberOfFloors]
   );
+  const descriptionDataErrors = useMemo(() => ({ description }), [description]);
+  const locationErrors = useMemo(() => ({ voivodeship }), [voivodeship]);
+  const contactDataErrors = useMemo(
+    () => ({ firstname, email, dialCode, phoneNumber, ownerType }),
+    [firstname, email, dialCode, phoneNumber, ownerType]
+  );
+  const detailsErrors = useMemo(
+    () => ({ constructionYear, insideHeight, vacatedFrom }),
+    [constructionYear, insideHeight, vacatedFrom]
+  );
 
   // Handlers
   // -------------------------------------------------------------------
   const handleFormSubmit: SubmitHandler<FormValues> = (data, e) => {
-    console.log(data, e);
+    console.log("data", data, e);
   };
 
   const handleFormErrors: SubmitErrorHandler<FormValues> = (errors, e) => {
-    console.log(errors, e);
+    console.log("errors", errors, e);
   };
 
   return (
@@ -231,19 +256,23 @@ export const OfferForm = (props: Props) => {
         <div className="row">
           <div className="col-12">
             {/* --------------------------------- Transaction box --------------------------------- */}
-            <Transaction data={transaction} setData={setTransaction} />
+            <Transaction
+              transaction={formType.transaction as TransactionType}
+              control={control}
+            />
             {/* --------------------------------- End --------------------------------- */}
           </div>
           <div className="col-12">
             {/* --------------------------------- Types box --------------------------------- */}
-            <PropertyType data={propertyType} setData={setPropertyType} />
+            <PropertyType
+              propertyType={formType.propertyType as PropertyTypeType}
+              control={control}
+            />
             {/* --------------------------------- End --------------------------------- */}
           </div>
           <div className="col-12">
             {/* --------------------------------- Base parameters --------------------------------- */}
             <BaseParameters
-              data={baseParameters}
-              setData={setBaseParameters}
               register={register}
               control={control}
               clearErrors={clearErrors}
@@ -254,14 +283,20 @@ export const OfferForm = (props: Props) => {
           <div className="col-12">
             {/* --------------------------------- Description data --------------------------------- */}
             <DescriptionData
-              data={descriptionData}
-              setData={setDescriptionData}
+              register={register}
+              errors={descriptionDataErrors}
             />
             {/* --------------------------------- End --------------------------------- */}
           </div>
           <div className="col-12">
             {/* --------------------------------- Location --------------------------------- */}
-            <Location data={location} setData={setLocation} />
+            <Location
+              register={register}
+              control={control}
+              errors={locationErrors}
+              watch={watch}
+              setValue={setValue}
+            />
             {/* --------------------------------- End --------------------------------- */}
           </div>
           <div className="col-12">
@@ -271,21 +306,33 @@ export const OfferForm = (props: Props) => {
           </div>
           <div className="col-12">
             {/* --------------------------------- Details --------------------------------- */}
-            <Details data={details} setData={setDetails} />
+            <Details
+              register={register}
+              control={control}
+              errors={detailsErrors}
+            />
             {/* --------------------------------- End --------------------------------- */}
           </div>
           <div className="col-12">
             {/* --------------------------------- Contact data --------------------------------- */}
-            <ContactData data={contactData} setData={setContactData} />
+            <ContactData
+              register={register}
+              control={control}
+              errors={contactDataErrors}
+            />
             {/* --------------------------------- End --------------------------------- */}
           </div>
           <div className="col-12">
             <div className="offer-form__submit-button-wrapper">
-              <Button
-                text="Dodaj ogłoszenie"
-                type="submit"
-                modifiers={["primary"]}
-                mixes={["offer-form"]}
+              <Wave
+                component={
+                  <Button
+                    text="dodaj ogłoszenie"
+                    type="submit"
+                    modifiers={["primary", "primary-filled", "medium-500"]}
+                    mixes={["offer-form"]}
+                  />
+                }
               />
             </div>
           </div>

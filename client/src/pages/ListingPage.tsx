@@ -14,7 +14,10 @@ export const ListingPage = () => {
             </section>
           </div>
           <div className="col-6">
-            <section className="map-box-container d-none d-lg-block">
+            <section
+              className="map-box-container d-none d-lg-block"
+              style={{ width: "100%", height: "100%" }}
+            >
               <MapContainer />
             </section>
           </div>

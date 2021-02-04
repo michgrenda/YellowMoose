@@ -1,5 +1,22 @@
+# Visual studio code
+.vscode/
+
+# Dependency directories
 node_modules/
+
+# Build/generate output
 dist/
-uploads/
-config/default.json
-config/production.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Client
+
+# Server
+server/config/default.json
+server/config/production.json

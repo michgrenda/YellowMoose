@@ -1,9 +1,0 @@
-generates:
-  ./server/graphql/API/apartments/resolvers-types.ts:
-    schema: ./dist/graphql/API/apartments/types.js
-    plugins:
-      - typescript
-      - typescript-resolvers
-    config:
-      useIndexSignature: true
-      maybeValue: T | null | undefined

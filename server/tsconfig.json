@@ -3,12 +3,12 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "dist",
-    "rootDir": "server",
+    "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2020.Promise"]
+    "lib": ["ES2020.Promise"],
+    "sourceMap": true
   },
-  "include": ["server/**/*"],
-  "exclude": ["server/ts/*.ts", "node_modules"]
+  "include": ["src"]
 }

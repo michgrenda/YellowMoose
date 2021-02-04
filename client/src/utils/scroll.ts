@@ -16,14 +16,16 @@ export const scrollToElement = (querySelector: string, yOffset: number) => {
   if (element) {
     const _yOffset = yOffset;
 
-    const y =
-      element.getBoundingClientRect().top + window.pageYOffset + _yOffset;
+    const rect = element.getBoundingClientRect();
+    let y = rect.top + window.pageYOffset + _yOffset;
 
     if (isElementInViewPort(element))
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    else window.scrollTo({ top: y, behavior: "smooth" });
+      y =
+        rect.bottom +
+        window.pageYOffset -
+        (window.innerHeight || document.documentElement.clientHeight) -
+        _yOffset;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
   }
 };

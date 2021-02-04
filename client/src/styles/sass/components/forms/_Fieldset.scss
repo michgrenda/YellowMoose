@@ -69,7 +69,7 @@
     }
   }
 
-  &--types-box {
+  &--property-type-box {
     $mixRoot: ".control";
 
     background-color: transparent;
@@ -126,6 +126,10 @@
     }
   }
 
+  &--transaction-box {
+    font-size: 14px;
+  }
+
   &--base-parameters,
   &--description-data,
   &--location,
@@ -169,5 +173,17 @@
 .photo {
   &__thumbs-container {
     display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.property-type {
+  &__subtype {
+    @extend %primary-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 15px 20px;
   }
 }

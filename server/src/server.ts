@@ -29,5 +29,6 @@ app.use(
 );
 
 app.listen(PORT, () => {
+  const val = 1;
   console.log(chalkColors.success(`Server started on port ${PORT}`));
 });

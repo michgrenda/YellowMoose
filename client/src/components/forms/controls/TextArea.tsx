@@ -2,18 +2,14 @@ import React, { TextareaHTMLAttributes } from "react";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
-import { BEM } from "../../../types";
-
-// File interfaces
-interface TextAreaProps {
-  label?: string;
-  information?: string;
-}
+import { BEM, ControlReactHookForm } from "../../../ts/types";
 
 // Props and default props
-type Props = TextAreaProps & TextareaHTMLAttributes<HTMLTextAreaElement> & BEM;
+type Props = TextareaHTMLAttributes<HTMLTextAreaElement> &
+  BEM &
+  ControlReactHookForm;
 
-export const TextArea = ({ modifiers, mixes, ...rest }: Props) => {
+export const TextArea = ({ register, modifiers, mixes, ...rest }: Props) => {
   // Manage received modifiers and mixes
   const modifiersAndMixes = modifyAndMix(modifiers, mixes, "text-area");
 
@@ -24,7 +20,11 @@ export const TextArea = ({ modifiers, mixes, ...rest }: Props) => {
       }`}
     >
       <div className="text-area__input-wrapper">
-        <textarea className="text-area__input" {...rest}></textarea>
+        <textarea
+          className="text-area__input"
+          ref={register}
+          {...rest}
+        ></textarea>
       </div>
     </div>
   );

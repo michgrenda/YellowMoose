@@ -1,21 +1,12 @@
 import React, { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
+// Components
+import { Button } from "../forms/controls/Button";
+import { Wave } from "../Wave";
+// Icons
+import MenuOutlinedIcon from "@material-ui/icons/MenuOutlined";
 
-// Interfaces
-interface Routes {
-  path: string;
-  text: string;
-  sublist?: {
-    title: string;
-    options: {
-      path: string;
-      text: string;
-    }[];
-  }[];
-}
-
-// TEMPORARY
-const routes: Routes[] = [
+const routes = [
   {
     path: "/buy",
     text: "kup",
@@ -24,19 +15,19 @@ const routes: Routes[] = [
         title: "",
         options: [
           {
-            path: "/flats",
+            path: "/buy/flats",
             text: "mieszkanie",
           },
           {
-            path: "/houses",
+            path: "/buy/houses",
             text: "dom",
           },
           {
-            path: "/plots",
+            path: "/buy/plots",
             text: "działkę",
           },
           {
-            path: "/commercial-buildings",
+            path: "/buy/commercial-buildings",
             text: "nieruchomość komerycyjną",
           },
         ],
@@ -51,23 +42,23 @@ const routes: Routes[] = [
         title: "od kogoś",
         options: [
           {
-            path: "/for-rent/rooms",
+            path: "/rent/for-rent/rooms",
             text: "pokój",
           },
           {
-            path: "/for-rent/flats",
+            path: "/rent/for-rent/flats",
             text: "mieszkanie",
           },
           {
-            path: "/for-rent/houses",
+            path: "/rent/for-rent/houses",
             text: "dom",
           },
           {
-            path: "/for-rent/plots",
+            path: "/rent/for-rent/plots",
             text: "działkę",
           },
           {
-            path: "/for-rent/commercial-buildings",
+            path: "/rent/for-rent/commercial-buildings",
             text: "nieruchomość komerycyjną",
           },
         ],
@@ -76,28 +67,39 @@ const routes: Routes[] = [
         title: "komuś",
         options: [
           {
-            path: "/form/rooms",
+            path: "/rent/form/rooms",
             text: "pokój",
           },
           {
-            path: "/form/flats",
+            path: "/rent/form/flats",
             text: "mieszkanie",
           },
           {
-            path: "/form/houses",
+            path: "/rent/form/houses",
             text: "dom",
           },
           {
-            path: "/form/plots",
+            path: "/rent/form/plots",
             text: "działkę",
           },
           {
-            path: "/form/commercial-buildings",
+            path: "/rent/form/commercial-buildings",
             text: "nieruchomość komerycyjną",
           },
         ],
       },
     ],
+  },
+];
+
+const buttons = [
+  {
+    text: "ulubione",
+    type: "secondary-outlined",
+  },
+  {
+    text: "dodaj ogłoszenie",
+    type: "secondary-filled",
   },
 ];
 
@@ -197,6 +199,20 @@ export const Navbar = () => {
     </li>
   ));
 
+  const buttonsList = buttons.map((button, index) => (
+    <li className="navbar__item" key={index}>
+      <Wave
+        component={
+          <Button
+            text={button.text}
+            modifiers={["secondary", "medium-500", button.type]}
+            mixes={["navbar"]}
+          />
+        }
+      />
+    </li>
+  ));
+
   const sublists = routes.map((route) => {
     return (
       route.sublist && (
@@ -243,6 +259,26 @@ export const Navbar = () => {
               <div className="col-12">
                 <div className="navbar__panel">
                   <ul className="navbar__list">{routesList}</ul>
+                  <ul className="navbar__list d-none d-md-flex">
+                    {buttonsList}
+                  </ul>
+                  <ul className="navbar__list d-flex d-md-none">
+                    <li className="navbar__item">
+                      <Wave
+                        component={
+                          <Button
+                            icon={<MenuOutlinedIcon />}
+                            modifiers={[
+                              "navbar-menu",
+                              "border-radius-50",
+                              "medium-500",
+                            ]}
+                            mixes={["navbar"]}
+                          />
+                        }
+                      />
+                    </li>
+                  </ul>
                 </div>
               </div>
               <div className="col-12">

@@ -1,33 +1,19 @@
 import React, { HTMLAttributes } from "react";
-// Rifm
-import { useRifm } from "rifm";
-import {
-  replaceDotWithComma,
-  formatFloatingPointNumber,
-  formatInteger,
-  parseNumber,
-  parseInteger,
-} from "../../../utils/rifm";
+// React-number-format
+import NumberFormat from "react-number-format";
 // React-hook-form
 import { Controller } from "react-hook-form";
 // Components
-import { Fieldset } from "../../../components/form/Fieldset";
-import { Label } from "../../../components/form/Label";
-import { Field } from "../../../components/form/controls/Field";
-import { ExtendedField } from "../../../components/form/controls/ExtendedField";
-import { SelectField } from "../../..//components/form/controls/SelectField";
-import { Control } from "../../../components/form/controls/Control";
-import { LabelsList } from "../../../components/form/LabelsList";
-import { FieldsList } from "../../../components/form/FieldsList";
-// Handlers
-import { handleInputChange, handleSelectChange } from "../../../utils/handlers";
+import { Fieldset } from "../../../components/forms/Fieldset";
+import { Label } from "../../../components/forms/Label";
+import { Field } from "../../../components/forms/controls/Field";
+import { ExtendedField } from "../../../components/forms/controls/ExtendedField";
+import { SelectField } from "../../..//components/forms/controls/SelectField";
+import { Control } from "../../../components/forms/controls/Control";
+import { LabelsList } from "../../../components/forms/LabelsList";
+import { FieldsList } from "../../../components/forms/FieldsList";
 // Types
-import { BaseParametersState } from "../forms/OfferForm";
-import {
-  FieldsetProps,
-  ControlReactHookForm,
-  FieldsetWithErrors,
-} from "../../../types";
+import { ControlReactHookForm, FieldsetWithErrors } from "../../../ts/types";
 
 // Options
 const currencyOptions = [
@@ -50,56 +36,12 @@ const floorAndNumberOfFloorsOptions = [...Array(floorNumber + 1)].map(
 );
 
 // Props and default props
-type Props = FieldsetProps<BaseParametersState> &
-  HTMLAttributes<HTMLDivElement> &
+type Props = HTMLAttributes<HTMLDivElement> &
   ControlReactHookForm &
   FieldsetWithErrors;
 
 export const BaseParameters = React.memo(
-  ({
-    data: baseParameters,
-    setData: setBaseParameters,
-    register,
-    control,
-    clearErrors,
-    errors,
-    ...rest
-  }: Props) => {
-    // Rifm
-    const areaInput = useRifm({
-      accept: /[\d.,]/g,
-      format: (v) => formatFloatingPointNumber(v, 2),
-      replace: replaceDotWithComma,
-      value: baseParameters.area,
-      onChange: (value) =>
-        setBaseParameters((prevState) => ({
-          ...prevState,
-          area: parseNumber(value),
-        })),
-    });
-
-    const roomsInput = useRifm({
-      accept: /\d/g,
-      format: formatInteger,
-      value: baseParameters.rooms,
-      onChange: (value) =>
-        setBaseParameters((prevState) => ({
-          ...prevState,
-          rooms: parseInteger(value),
-        })),
-    });
-
-    const priceInput = useRifm({
-      accept: /\d/g,
-      format: formatInteger,
-      value: baseParameters.price,
-      onChange: (value) =>
-        setBaseParameters((prevState) => ({
-          ...prevState,
-          price: parseInteger(value),
-        })),
-    });
-
+  ({ register, control, clearErrors, errors, watch, ...rest }: Props) => {
     // Variables
     const floorErrorMessage =
       errors.floor && errors.floor.value && errors.floor.value.message;
@@ -120,11 +62,8 @@ export const BaseParameters = React.memo(
             <Field
               id="title"
               name="title"
-              value={baseParameters.title}
-              onChange={(e) => handleInputChange(e, setBaseParameters)}
               required
               modifiers={["large"]}
-              maxLength={50}
               register={register}
             />
           </ExtendedField>
@@ -134,14 +73,22 @@ export const BaseParameters = React.memo(
           >
             <Label htmlFor="area" label="powierzchnia (m²)" isRequired />
             <Field
-              id="area"
-              name="area"
-              value={areaInput.value}
-              onChange={areaInput.onChange}
-              required
               modifiers={["medium"]}
-              maxLength={10}
-              register={register}
+              render={(className: string) => (
+                <Controller
+                  as={NumberFormat}
+                  thousandSeparator=" "
+                  decimalSeparator=","
+                  decimalScale={2}
+                  allowedDecimalSeparators={[".", ","]}
+                  allowNegative={false}
+                  id="area"
+                  name="area"
+                  required
+                  control={control}
+                  className={className}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField
@@ -150,14 +97,20 @@ export const BaseParameters = React.memo(
           >
             <Label htmlFor="rooms" label="liczba pokoi" isRequired />
             <Field
-              id="rooms"
-              name="rooms"
-              value={roomsInput.value}
-              onChange={roomsInput.onChange}
-              required
               modifiers={["medium"]}
-              maxLength={10}
-              register={register}
+              render={(className: string) => (
+                <Controller
+                  as={NumberFormat}
+                  thousandSeparator=""
+                  decimalScale={0}
+                  allowNegative={false}
+                  id="rooms"
+                  name="rooms"
+                  required
+                  control={control}
+                  className={className}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField
@@ -168,52 +121,84 @@ export const BaseParameters = React.memo(
             <FieldsList
               inputs={[
                 <Field
-                  id="price"
-                  name="price"
-                  value={priceInput.value}
-                  onChange={priceInput.onChange}
-                  required
                   modifiers={["medium"]}
-                  maxLength={10}
-                  register={register}
+                  render={(className: string) => (
+                    <Controller
+                      as={NumberFormat}
+                      thousandSeparator=" "
+                      decimalSeparator=","
+                      decimalScale={2}
+                      allowedDecimalSeparators={[".", ","]}
+                      allowNegative={false}
+                      id="price"
+                      name="price"
+                      required
+                      control={control}
+                      className={className}
+                    />
+                  )}
                 />,
-                <SelectField
-                  value={baseParameters.currency}
-                  defaultValue={baseParameters.currency}
-                  onChange={(option) =>
-                    handleSelectChange(option, setBaseParameters, "currency")
-                  }
-                  options={currencyOptions}
-                  widthExtraSmall={true}
-                  isRequired
+                <Controller
+                  name="currency"
+                  control={control}
+                  defaultValue={currencyOptions[0]}
+                  render={(
+                    { onChange, onBlur, value, name, ref },
+                    { invalid, isTouched, isDirty }
+                  ) => (
+                    <SelectField
+                      value={value}
+                      defaultValue={currencyOptions[0]}
+                      onChange={onChange}
+                      options={currencyOptions}
+                      widthExtraSmall={true}
+                      isRequired
+                    />
+                  )}
                 />,
               ]}
             />
           </ExtendedField>
-          <Control
-            id="negotiable"
+          <Controller
             name="negotiable"
-            label="cena do negocjacji"
-            value="negotiable"
-            checked={baseParameters.negotiable}
-            onChange={(e) => handleInputChange(e, setBaseParameters)}
-            mixes={["fieldset"]}
+            control={control}
+            defaultValue={false}
+            render={(
+              { onChange, onBlur, value, name, ref },
+              { invalid, isTouched, isDirty }
+            ) => (
+              <Control
+                id={name}
+                name={name}
+                label="cena do negocjacji"
+                checked={value}
+                onChange={(e) => onChange(e.target.checked)}
+                mixes={["fieldset"]}
+              />
+            )}
           />
           <ExtendedField mixes={["fieldset"]}>
             <Label
               htmlFor="isRentInPrice"
               label="czy cena zawiera czynsz dla administracji"
             />
-            <SelectField
-              value={baseParameters.isRentInPrice}
-              onChange={(option) =>
-                handleSelectChange(option, setBaseParameters, "isRentInPrice")
-              }
-              options={isRentInPriceOptions}
-              widthSmall={true}
-              isSearchable={false}
+            <Controller
               name="isRentInPrice"
-              inputId="isRentInPrice"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  options={isRentInPriceOptions}
+                  widthSmall={true}
+                  isSearchable={false}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField
@@ -234,56 +219,45 @@ export const BaseParameters = React.memo(
                 <Controller
                   name="floor"
                   control={control}
-                  render={(props) => (
-                    <div ref={props.ref} tabIndex={0}>
-                      <SelectField
-                        value={baseParameters.floor}
-                        onChange={(option) => {
-                          handleSelectChange(
-                            option,
-                            setBaseParameters,
-                            "floor"
-                          );
-                          props.onChange(option);
-                          props.onBlur();
-                          if (baseParameters.numberOfFloors)
-                            clearErrors("numberOfFloors");
-                        }}
-                        options={floorAndNumberOfFloorsOptions}
-                        widthSmall={true}
-                        isSearchable={false}
-                        name="floor"
-                        inputId="floor"
-                        isRequired
-                      />
-                    </div>
+                  render={(
+                    { onChange, onBlur, value, name, ref },
+                    { invalid, isTouched, isDirty }
+                  ) => (
+                    <SelectField
+                      value={value}
+                      onChange={(option) => {
+                        onChange(option);
+                        clearErrors("numberOfFloors");
+                        onBlur();
+                      }}
+                      options={floorAndNumberOfFloorsOptions}
+                      widthSmall={true}
+                      name={name}
+                      inputId={name}
+                      isRequired
+                    />
                   )}
                 />,
                 <Controller
                   name="numberOfFloors"
                   control={control}
-                  render={(props) => (
-                    <div ref={props.ref} tabIndex={0}>
-                      <SelectField
-                        value={baseParameters.numberOfFloors}
-                        onChange={(option) => {
-                          handleSelectChange(
-                            option,
-                            setBaseParameters,
-                            "numberOfFloors"
-                          );
-                          props.onChange(option);
-                          props.onBlur();
-                          if (baseParameters.floor) clearErrors("floor");
-                        }}
-                        options={floorAndNumberOfFloorsOptions}
-                        widthSmall={true}
-                        isSearchable={false}
-                        name="numberOfFloors"
-                        inputId="numberOfFloors"
-                        isRequired
-                      />
-                    </div>
+                  render={(
+                    { onChange, onBlur, value, name, ref },
+                    { invalid, isTouched, isDirty }
+                  ) => (
+                    <SelectField
+                      value={value}
+                      onChange={(option) => {
+                        onChange(option);
+                        clearErrors("floor");
+                        onBlur();
+                      }}
+                      options={floorAndNumberOfFloorsOptions}
+                      widthSmall={true}
+                      name={name}
+                      inputId={name}
+                      isRequired
+                    />
                   )}
                 />,
               ]}

@@ -1,6 +1,22 @@
-import React, { useState, useEffect, useRef, useCallback, memo } from "react";
+import React, { useState, memo } from "react";
+import ReactMapGL, {
+  ViewportProps,
+  NavigationControl,
+  AttributionControl,
+} from "react-map-gl";
 
-const GOOGLE_MAP_API_KEY = "AIzaSyDqWZag8X6J1rA1YaVC4bcOrfqPZrk27zc";
+import { MAPBOX_ACCESS_TOKEN } from "../../variables";
+
+// Styles
+const navigationControlStyle = {
+  right: 10,
+  top: 10,
+};
+
+const attributionControlStyle = {
+  right: 0,
+  bottom: 0,
+};
 
 // File interfaces
 interface MapProps {
@@ -19,71 +35,36 @@ const defaultProps = {
 };
 
 const Map = (props: Props) => {
-  // States
-  const [googleMap, setGoogleMap] = useState<{
-    map: google.maps.Map;
-    marker?: google.maps.Marker;
-  }>(null!);
-  // References
-  const googleMapRef = useRef<HTMLDivElement>(null!);
-
-  useEffect(() => {
-    if (!window.google) {
-      const googleMapScript = document.createElement("script");
-      // Set attributes
-      googleMapScript.defer = true;
-      googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_KEY}&libraries=places&region=${props.region}&language=${props.language}`;
-      document.head.appendChild(googleMapScript);
-
-      googleMapScript.addEventListener("load", handleScriptLoad);
-
-      return () =>
-        googleMapScript.removeEventListener("load", handleScriptLoad);
-    } else handleScriptLoad();
-  }, []);
-
-  const handleScriptLoad = useCallback(() => {
-    const map = createGoogleMap();
-    const geocoder = new google.maps.Geocoder();
-
-    geocoder.geocode({ address: props.country }, (results, status) => {
-      if (status !== "OK") {
-        console.error("Geocoder failed due to: " + status);
-        return;
-      }
-
-      map.setZoom(6);
-      map.setCenter(results[0].geometry.location);
-    });
-
-    // TEMPORARY
-    // const marker = createMarker(map);
-
-    setGoogleMap((prevState) => ({ ...prevState, map }));
-  }, []);
-
-  useEffect(() => {
-    if (googleMap) {
-      const map = googleMap.map;
-      if (map) createMarker(map);
-    }
-  }, [googleMap]);
-
-  const createGoogleMap = () =>
-    new window.google.maps.Map(googleMapRef.current, {
-      disableDefaultUI: true,
-    });
-
-  const createMarker = (map: google.maps.Map) =>
-    new window.google.maps.Marker({
-      position: { lat: 43.642567, lng: -79.387054 },
-      map: map,
-    });
+  const [viewport, setViewport] = useState<ViewportProps>({
+    latitude: 52.1246099075455,
+    longitude: 19.30063630556,
+    zoom: 5.2,
+  });
 
   return (
-    <section className="map-wrapper">
-      <div className="map" ref={googleMapRef}></div>
-    </section>
+    <ReactMapGL
+      {...viewport}
+      mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+      width="100%"
+      height="100%"
+      mapStyle="mapbox://styles/mapbox/streets-v11"
+      onViewportChange={(nextViewport: ViewportProps) =>
+        setViewport(nextViewport)
+      }
+      attributionControl={false}
+      className="map"
+    >
+      <NavigationControl
+        showCompass={false}
+        style={navigationControlStyle}
+        className="map__navigation-control"
+      />
+      <AttributionControl
+        compact={false}
+        style={attributionControlStyle}
+        className="map__attribution-control"
+      />
+    </ReactMapGL>
   );
 };
 

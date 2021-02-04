@@ -1,23 +1,17 @@
 import React, { HTMLAttributes } from "react";
-// Rifm
-import { useRifm } from "rifm";
-import {
-  formatCountryCode,
-  formatPhone,
-  parseDigits,
-} from "../../../utils/rifm";
+// React-number-format
+import NumberFormat from "react-number-format";
+// React-hook-form
+import { Controller } from "react-hook-form";
 // Components
-import { Fieldset } from "../../../components/form/Fieldset";
-import { Label } from "../../../components/form/Label";
-import { Field } from "../../../components/form/controls/Field";
-import { ExtendedField } from "../../../components/form/controls/ExtendedField";
-import { SelectField } from "../../..//components/form/controls/SelectField";
-import { FieldsList } from "../../../components/form/FieldsList";
-// Handlers
-import { handleInputChange, handleSelectChange } from "../../../utils/handlers";
+import { Fieldset } from "../../../components/forms/Fieldset";
+import { Label } from "../../../components/forms/Label";
+import { Field } from "../../../components/forms/controls/Field";
+import { ExtendedField } from "../../../components/forms/controls/ExtendedField";
+import { SelectField } from "../../..//components/forms/controls/SelectField";
+import { FieldsList } from "../../../components/forms/FieldsList";
 // Types
-import { ContactDataState } from "../forms/OfferForm";
-import { FieldsetProps } from "../../../types";
+import { ControlReactHookForm, FieldsetWithErrors } from "../../../ts/types";
 
 // Options
 const ownerTypeOptions = [
@@ -34,69 +28,47 @@ const ownerTypeOptions = [
 ];
 
 // Props and default props
-type Props = FieldsetProps<ContactDataState> & HTMLAttributes<HTMLDivElement>;
+type Props = HTMLAttributes<HTMLDivElement> &
+  ControlReactHookForm &
+  FieldsetWithErrors;
 
 export const ContactData = React.memo(
-  ({ data: contactData, setData: setContactData, ...rest }: Props) => {
-    // Rifm
-    const phoneNumberInput = useRifm({
-      accept: /[\d ]/g,
-      format: formatPhone,
-      value: contactData.phoneNumber,
-      onChange: (value) =>
-        setContactData((prevState) => ({
-          ...prevState,
-          phoneNumber: parseDigits(value),
-        })),
-    });
-
-    const countryCodeInput = useRifm({
-      accept: /[\d+ ]/g,
-      format: formatCountryCode,
-      value: contactData.countryCode,
-      onChange: (value) =>
-        setContactData((prevState) => ({
-          ...prevState,
-          countryCode: parseDigits(value),
-        })),
-    });
-
+  ({ register, control, errors, watch, ...rest }: Props) => {
     return (
       <div className="contact-data" {...rest}>
         <Fieldset title="informacje podstawowe" modifiers={["contact-data"]}>
           <ExtendedField
             mixes={["fieldset"]}
-            //   errors={contactDataErrors.firstnameIsValid}
+            errorMessages={[errors.firstname && errors.firstname.message]}
           >
             <Label htmlFor="firstname" label="imię" isRequired />
             <Field
               id="firstname"
               name="firstname"
-              value={contactData.firstname}
-              onChange={(e) => handleInputChange(e, setContactData)}
               required
               modifiers={["medium"]}
-              maxLength={25}
+              register={register}
             />
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            //   errors={contactDataErrors.emailIsValid}
+            errorMessages={[errors.email && errors.email.message]}
           >
             <Label htmlFor="email" label="twój adres e-mail" isRequired />
             <Field
               id="email"
               name="email"
-              value={contactData.email}
-              onChange={(e) => handleInputChange(e, setContactData)}
               required
               modifiers={["medium"]}
-              maxLength={25}
+              register={register}
             />
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            //   errors={contactDataErrors.phoneNumberIsValid}
+            errorMessages={[
+              errors.dialCode && errors.dialCode.message,
+              errors.phoneNumber && errors.phoneNumber.message,
+            ]}
           >
             <Label
               htmlFor="phoneNumber"
@@ -106,39 +78,69 @@ export const ContactData = React.memo(
             <FieldsList
               inputs={[
                 <Field
-                  id="countryCode"
-                  name="countryCode"
-                  value={countryCodeInput.value}
-                  onChange={countryCodeInput.onChange}
-                  required
                   modifiers={["extra-small"]}
+                  render={(className: string) => (
+                    <Controller
+                      as={NumberFormat}
+                      thousandSeparator=""
+                      decimalScale={0}
+                      prefix="+"
+                      allowEmptyFormatting
+                      allowNegative={false}
+                      id="dialCode"
+                      name="dialCode"
+                      defaultValue="+48"
+                      required
+                      control={control}
+                      className={className}
+                    />
+                  )}
                 />,
                 <Field
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={phoneNumberInput.value}
-                  onChange={phoneNumberInput.onChange}
-                  required
                   modifiers={["medium"]}
+                  render={(className: string) => (
+                    <Controller
+                      as={NumberFormat}
+                      thousandSeparator=""
+                      decimalScale={0}
+                      allowNegative={false}
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      required
+                      control={control}
+                      className={className}
+                    />
+                  )}
                 />,
               ]}
             />
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            //   errors={contactDataErrors.ownerTypeIsValid}
+            errorMessages={[
+              errors.ownerType &&
+                errors.ownerType.value &&
+                errors.ownerType.value.message,
+            ]}
           >
             <Label htmlFor="ownerType" label="zgłoszenie wysyła" isRequired />
-            <SelectField
-              value={contactData.ownerType}
-              onChange={(option) =>
-                handleSelectChange(option, setContactData, "ownerType")
-              }
-              options={ownerTypeOptions}
-              widthLarge={true}
+            <Controller
               name="ownerType"
-              inputId="ownerType"
-              isRequired
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  options={ownerTypeOptions}
+                  widthLarge={true}
+                  name={name}
+                  inputId={name}
+                  isRequired
+                />
+              )}
             />
           </ExtendedField>
         </Fieldset>

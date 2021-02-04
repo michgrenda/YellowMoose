@@ -13,7 +13,8 @@ import FormPage from "./pages/FormPage";
 export interface Routes {
   path: string;
   exact: boolean;
-  component?: React.ComponentType;
+  component?: any;
+  componentProps?: { [index: string]: any };
 }
 
 // TEMPORARY
@@ -21,7 +22,34 @@ const routes: Routes[] = [
   {
     path: "/",
     exact: true,
+    component: ListingPage,
+  },
+  {
+    path: "/rent/form/rooms",
+    exact: true,
     component: FormPage,
+    componentProps: {
+      transaction: "rent",
+      propertyType: "room",
+    },
+  },
+  {
+    path: "/rent/form/flats",
+    exact: true,
+    component: FormPage,
+    componentProps: {
+      transaction: "rent",
+      propertyType: "flat",
+    },
+  },
+  {
+    path: "/rent/form/houses",
+    exact: true,
+    component: FormPage,
+    componentProps: {
+      transaction: "rent",
+      propertyType: "house",
+    },
   },
 ];
 
@@ -37,19 +65,15 @@ const App: React.FC = () => {
     <ApolloProvider client={client}>
       <BrowserRouter>
         <Navbar />
-        {/* <Searchbar /> */}
+        <Searchbar />
 
         <main className="main">
           <Switch>
-            {routes.map(
-              ({ component: Component, ...rest }): JSX.Element => (
-                <Route
-                  key={rest.path}
-                  {...rest}
-                  render={() => (Component ? <Component /> : null)}
-                />
-              )
-            )}
+            {routes.map(({ component: Component, componentProps, ...rest }) => (
+              <Route key={rest.path} {...rest}>
+                {Component ? <Component {...componentProps} /> : null}
+              </Route>
+            ))}
           </Switch>
         </main>
       </BrowserRouter>

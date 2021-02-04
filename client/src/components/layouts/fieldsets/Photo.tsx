@@ -1,15 +1,15 @@
 import React, { HTMLAttributes } from "react";
 // Components
-import { Fieldset } from "../../../components/form/Fieldset";
-import { FileField } from "../../../components/form/controls/FileField";
-import { Thumb } from "../../form/Thumb";
+import { Fieldset } from "../../../components/forms/Fieldset";
+import { FileField } from "../../../components/forms/controls/FileField";
+import { Thumb } from "../../forms/Thumb";
 // Icons
-import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import AddPhotoAlternateOutlinedIcon from "@material-ui/icons/AddPhotoAlternateOutlined";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import RotateRightRoundedIcon from "@material-ui/icons/RotateRightRounded";
 // Types
 import { PhotoState } from "../forms/OfferForm";
-import { FieldsetProps } from "../../../types";
+import { FieldsetProps } from "../../../ts/types";
 
 // Props and default props
 type Props = FieldsetProps<PhotoState> & HTMLAttributes<HTMLDivElement>;
@@ -136,12 +136,12 @@ export const Photo = React.memo(
             acceptedFiles="(*.jpeg, *.jpg, *.png)"
             mixes={["fieldset"]}
             component={
-              <AddPhotoAlternateIcon
+              <AddPhotoAlternateOutlinedIcon
                 className="photo__file-input-icon"
-                style={{ fontSize: "56px" }}
+                style={{ fontSize: "54px" }}
               />
             }
-            maxFiles={3}
+            maxFiles={15}
             maxSize={1024 * 1024 * 5}
             multiple={true}
             accept="image/jpeg, image/jpg, image/png"

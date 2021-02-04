@@ -8,7 +8,7 @@
     "generate": "graphql-codegen",
     "start": "node dist/server",
     "server": "nodemon dist/server",
-    "client": "npm start --prefix client",
+    "client": "npm start --prefix ../client",
     "dev": "concurrently \"tsc -w\" \"npm run server\" \"npm run client\""
   },
   "repository": {

@@ -1,0 +1,118 @@
+.button {
+  /* =============== Variables =============== */
+  $button-color-primary: $color-white;
+  $button-color-secondary: $color-limed-spruce;
+  $button-color-tertiary: $color-aquamarine;
+  /* ===============    End    =============== */
+
+  background-color: transparent;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+
+  border: none;
+
+  font-size: inherit;
+
+  cursor: pointer;
+
+  &--light-300 {
+    font-weight: 300;
+  }
+
+  &--regular-400 {
+    font-weight: 400;
+  }
+
+  &--medium-500 {
+    font-weight: 500;
+  }
+
+  &--bold-700 {
+    font-weight: 700;
+  }
+
+  &--border-radius-50 {
+    border-radius: 50%;
+  }
+
+  &--primary {
+    height: 40px;
+    width: 200px;
+
+    border-radius: 3px;
+  }
+
+  &--primary-filled {
+    background-color: $button-color-secondary;
+    color: $button-color-primary;
+
+    &.focus-visible,
+    &:hover {
+      background-color: darken($color: $button-color-secondary, $amount: 5%);
+    }
+  }
+
+  &--primary-outlined {
+    color: $button-color-secondary;
+    border: 1px solid $button-color-secondary;
+
+    &.focus-visible,
+    &:hover {
+      background-color: darken($color: $color-white, $amount: 1%);
+    }
+  }
+
+  &--secondary {
+    height: 32px;
+    width: 135px;
+
+    border-radius: 16px;
+  }
+
+  &--secondary-filled {
+    background-color: $button-color-tertiary;
+    color: $button-color-primary;
+
+    &.focus-visible,
+    &:hover {
+      background-color: darken($color: $button-color-tertiary, $amount: 5%);
+    }
+  }
+
+  &--secondary-outlined {
+    color: $button-color-tertiary;
+    border: 1px solid $button-color-tertiary;
+
+    &.focus-visible,
+    &:hover {
+      background-color: darken($color: $color-white, $amount: 1%);
+    }
+  }
+
+  &--navbar-menu {
+    color: $button-color-tertiary;
+
+    height: 40px;
+    width: 40px;
+
+    &.focus-visible,
+    &:hover {
+      background-color: transparentize(
+        $color: $button-color-tertiary,
+        $amount: 0.75
+      );
+    }
+  }
+
+  &__text {
+    display: block;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+}

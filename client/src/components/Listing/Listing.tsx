@@ -23,7 +23,7 @@ interface Routes {
 // TEMPORARY
 const routes: Routes[] = [
   {
-    path: "/all",
+    path: "/",
     text: "wszystkie",
   },
   {

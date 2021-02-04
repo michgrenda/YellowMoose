@@ -6,6 +6,7 @@ import Modal from "react-modal";
 // Components
 import App from "./App";
 // Styles
+import "mapbox-gl/dist/mapbox-gl.css";
 import "./styles/build/index.css";
 // Focus
 import "focus-visible";

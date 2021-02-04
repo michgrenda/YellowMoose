@@ -4,7 +4,7 @@ import { modifyAndMix } from "../../../utils/BEM";
 // Components
 import { Error } from "../Error";
 // Types
-import { BEM } from "../../../types";
+import { BEM } from "../../../ts/types";
 
 // File interfaces
 interface ExtendedFieldProps {
@@ -37,7 +37,13 @@ export const ExtendedField = ({
       ));
 
   return (
-    <div className={`extended-field ${modifiersAndMixes}`} {...rest}>
+    <div
+      className={`extended-field ${modifiersAndMixes}`}
+      data-valid={
+        errorsList ? (errorsList.length ? "invalid" : "valid") : "valid"
+      }
+      {...rest}
+    >
       {children}
       {information && (
         <p className="extended-field__information">{information}</p>

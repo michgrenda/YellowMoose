@@ -2,7 +2,7 @@ import React, { useState, FieldsetHTMLAttributes } from "react";
 // Utils
 import { modifyAndMix } from "../../utils/BEM";
 // Types
-import { BEM } from "../../types";
+import { BEM } from "../../ts/types";
 
 // File interfaces
 interface FieldsetProps {

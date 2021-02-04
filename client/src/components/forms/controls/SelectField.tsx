@@ -5,7 +5,7 @@ import { customStyles } from "../../../utils/react-select/styles";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
-import { BEM } from "../../../types";
+import { BEM } from "../../../ts/types";
 
 // File interfaces
 interface SelectFieldProps {

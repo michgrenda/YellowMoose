@@ -2,14 +2,21 @@ import React, { InputHTMLAttributes } from "react";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
-import { BEM, ControlReactHookForm } from "../../../types";
+import { BEM, ControlReactHookForm } from "../../../ts/types";
+
+// File interfaces
+interface FieldProps {
+  render?: Function;
+}
 
 // Props and default props
-export type Props = InputHTMLAttributes<HTMLInputElement> &
+export type Props = FieldProps &
+  InputHTMLAttributes<HTMLInputElement> &
   BEM &
   ControlReactHookForm;
 
 export const Field = ({
+  render,
   register,
   modifiers: propsModifiers,
   mixes: propsMixes,
@@ -25,7 +32,16 @@ export const Field = ({
       } `}
     >
       <div className="field__input-wrapper">
-        <input className="field__input" type="text" ref={register} {...rest} />
+        {render ? (
+          render("field__input")
+        ) : (
+          <input
+            className="field__input"
+            type="text"
+            ref={register}
+            {...rest}
+          />
+        )}
       </div>
     </div>
   );

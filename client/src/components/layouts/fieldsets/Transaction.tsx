@@ -1,47 +1,85 @@
-import React, { HTMLAttributes } from "react";
+import React, { useState, HTMLAttributes } from "react";
+// React-hook-form
+import { Controller } from "react-hook-form";
 // Components
-import { Fieldset } from "../../../components/form/Fieldset";
-import { Control } from "../../../components/form/controls/Control";
-// Handlers
-import { handleInputChange } from "../../../utils/handlers";
+import { Fieldset } from "../../../components/forms/Fieldset";
+import { Control } from "../../../components/forms/controls/Control";
 // Types
-import { TransactionState } from "../forms/OfferForm";
-import { FieldsetProps } from "../../../types";
+import { ControlReactHookForm, FieldsetWithErrors } from "../../../ts/types";
 
 // Data
 const transactions = [
   {
-    id: "sell",
-    label: "sprzedaj",
     value: "sell",
+    label: "sprzedaj",
   },
   {
-    id: "rent",
-    label: "wynajmij",
     value: "rent",
+    label: "wynajmij",
   },
 ];
 
+// File types
+export type TransactionType = "sell" | "rent";
+
+// File interfaces
+interface TransactionProps {
+  transaction?: TransactionType;
+}
+
 // Props and default props
-type Props = FieldsetProps<TransactionState> & HTMLAttributes<HTMLDivElement>;
+type Props = TransactionProps &
+  HTMLAttributes<HTMLDivElement> &
+  ControlReactHookForm &
+  FieldsetWithErrors;
 
 export const Transaction = React.memo(
-  ({ data: transaction, setData: setTransaction, ...rest }: Props) => {
+  ({
+    transaction: transactionProps = "sell",
+    register,
+    control,
+    errors,
+    watch,
+    ...rest
+  }: Props) => {
+    // States
+    const [transaction, setTransaction] = useState<TransactionType>(
+      transactionProps
+    );
+
     // Variables
-    const transactionRadioInputs = transactions.map((data) => (
-      <Control
-        id={data.id}
+    const transactionRadioInputs = (
+      <Controller
         name="transaction"
-        label={data.label}
-        checked={transaction.transaction === data.value}
-        value={data.value}
-        onChange={(e) => handleInputChange(e, setTransaction, true)}
-        type="radio"
-        modifiers={["medium-500"]}
-        mixes={["fieldset"]}
-        key={data.id}
+        control={control}
+        defaultValue={transaction}
+        render={(
+          { onChange, onBlur, value, name, ref },
+          { invalid, isTouched, isDirty }
+        ) => (
+          <>
+            {transactions.map(({ value: transactionValue, label }) => (
+              <Control
+                id={transactionValue}
+                name="transaction"
+                label={label}
+                checked={transaction === transactionValue}
+                onChange={(e) => {
+                  const value = e.target.value as TransactionType;
+                  setTransaction(value);
+                  onChange(value);
+                }}
+                value={transactionValue}
+                type="radio"
+                modifiers={["medium-500"]}
+                mixes={["fieldset"]}
+                key={transactionValue}
+              />
+            ))}
+          </>
+        )}
       />
-    ));
+    );
 
     return (
       <div className="transaction" {...rest}>

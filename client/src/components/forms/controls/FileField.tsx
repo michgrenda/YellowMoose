@@ -5,7 +5,7 @@ import { Error } from "../Error";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
-import { BEM } from "../../../types";
+import { BEM } from "../../../ts/types";
 
 // File interfaces
 interface FileFieldProps {
@@ -59,13 +59,13 @@ export const FileField = ({
       case "too-many-files":
         return `za dużo plików (maksymalnie ${rest.maxFiles})`;
       case "file-invalid-type":
-        return "nieważny typ pliku";
+        return "nieprawidłowy typ pliku";
       case "file-too-large":
         return "za duży plik";
       case "file-too-small":
         return "za mały plik";
       default:
-        return "";
+        return "nieokreślony błąd";
     }
   });
 

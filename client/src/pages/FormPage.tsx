@@ -2,7 +2,22 @@ import React from "react";
 // Containers
 import { OfferContainer } from "../containers/OfferContainer";
 
-const FormPage = () => {
+// Context
+export const FormTypeContext = React.createContext({
+  transaction: "sell",
+  propertyType: "flat",
+});
+
+// File interfaces
+interface FormPageProps {
+  transaction: string;
+  propertyType: string;
+}
+
+// Props and default props
+type Props = FormPageProps;
+
+const FormPage = (props: Props) => {
   return (
     <section className="form-page">
       <div className="container">
@@ -13,7 +28,9 @@ const FormPage = () => {
             </header>
           </div>
           <div className="col-12">
-            <OfferContainer />
+            <FormTypeContext.Provider value={{ ...props }}>
+              <OfferContainer />
+            </FormTypeContext.Provider>
           </div>
         </div>
       </div>

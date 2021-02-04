@@ -1,28 +1,18 @@
-import React, { HTMLAttributes } from "react";
-// Rifm
-import { useRifm } from "rifm";
-import {
-  replaceDotWithComma,
-  formatFloatingPointNumber,
-  formatInteger,
-  formatDate,
-  parseNumber,
-  parseInteger,
-  addDateMask,
-} from "../../../utils/rifm";
+import React, { useState, HTMLAttributes } from "react";
+// React-number-format
+import NumberFormat from "react-number-format";
+// React-hook-form
+import { Controller } from "react-hook-form";
 // Components
-import { Fieldset } from "../../../components/form/Fieldset";
-import { Label } from "../../../components/form/Label";
-import { Field } from "../../../components/form/controls/Field";
-import { ExtendedField } from "../../../components/form/controls/ExtendedField";
-import { SelectField } from "../../../components/form/controls/SelectField";
-import { Control } from "../../../components/form/controls/Control";
-import { ControlsList } from "../../../components/form/ControlsList";
-// Handlers
-import { handleInputChange, handleSelectChange } from "../../../utils/handlers";
+import { Fieldset } from "../../../components/forms/Fieldset";
+import { Label } from "../../../components/forms/Label";
+import { Field } from "../../../components/forms/controls/Field";
+import { ExtendedField } from "../../../components/forms/controls/ExtendedField";
+import { SelectField } from "../../../components/forms/controls/SelectField";
+import { Control } from "../../../components/forms/controls/Control";
+import { ControlsList } from "../../../components/forms/ControlsList";
 // Types
-import { DetailsState } from "../forms/OfferForm";
-import { FieldsetProps } from "../../../types";
+import { ControlReactHookForm, FieldsetWithErrors } from "../../../ts/types";
 
 // Options
 const buildingTypeOptions = [
@@ -111,7 +101,7 @@ const parkingPlaceOptions = [
 ];
 
 // Data
-const facilities = [
+const _facilities = [
   { name: "hasAirConditioning", label: "klimatyzacja" },
   { name: "kitchenIsFurnished", label: "kuchnia umeblowana" },
   { name: "hasBasement", label: "piwnica" },
@@ -126,102 +116,67 @@ const facilities = [
   { name: "closedComplex", label: "osiedle zamknięte" },
 ];
 
-const media = [
+const _media = [
   { name: "hasGas", label: "gaz" },
   { name: "hasInternet", label: "internet" },
   { name: "hasPhone", label: "telefon" },
 ];
 
+// File interfaces
+export interface DetailsState {
+  facilities: { [index: string]: boolean };
+  media: { [index: string]: boolean };
+}
+
 // Props and default props
-type Props = FieldsetProps<DetailsState> & HTMLAttributes<HTMLDivElement>;
+type Props = HTMLAttributes<HTMLDivElement> &
+  ControlReactHookForm &
+  FieldsetWithErrors;
 
 export const Details = React.memo(
-  ({ data: details, setData: setDetails, ...rest }: Props) => {
-    // Rifm
-    const constructionYearInput = useRifm({
-      accept: /\d/g,
-      format: formatInteger,
-      value: details.constructionYear,
-      onChange: (value) =>
-        setDetails((prevState) => ({
-          ...prevState,
-          constructionYear: parseInteger(value),
-        })),
+  ({ register, control, errors, watch, ...rest }: Props) => {
+    // States
+    const [facilities, setFacilities] = useState<{ [index: string]: boolean }>({
+      hasAirConditioning: false,
+      kitchenIsFurnished: false,
+      hasBasement: false,
+      hasIntercom: false,
+      hasFridge: false,
+      hasTVSet: false,
+      hasFurniture: false,
+      hasAttic: false,
+      hasGasOven: false,
+      hasGarden: false,
+      hasWashingMachine: false,
+      closedComplex: false,
     });
-
-    const insideHeightInput = useRifm({
-      accept: /[\d.,]/g,
-      format: (v) => formatFloatingPointNumber(v, 1),
-      replace: replaceDotWithComma,
-      value: details.insideHeight,
-      onChange: (value) =>
-        setDetails((prevState) => ({
-          ...prevState,
-          insideHeight: parseNumber(value),
-        })),
-    });
-
-    const energyDemandInput = useRifm({
-      accept: /[\d.,]/g,
-      format: (v) => formatFloatingPointNumber(v, 3),
-      replace: replaceDotWithComma,
-      value: details.energyDemand,
-      onChange: (value) =>
-        setDetails((prevState) => ({
-          ...prevState,
-          energyDemand: parseNumber(value),
-        })),
-    });
-
-    const vacatedFromInput = useRifm({
-      accept: /\d/g,
-      mask: true,
-      format: formatDate,
-      replace: addDateMask,
-      value: details.vacatedFrom,
-      onChange: (value) =>
-        setDetails((prevState) => ({
-          ...prevState,
-          vacatedFrom: value,
-        })),
+    const [media, setMedia] = useState<{ [index: string]: boolean }>({
+      hasGas: false,
+      hasInternet: false,
+      hasPhone: false,
     });
 
     // Variables
-    const facilitiesControls = facilities.map((data) => (
+    const facilitiesControls = _facilities.map((data) => (
       <Control
         id={data.name}
         name={data.name}
         label={data.label}
         value={data.name}
-        checked={details.facilities[data.name]}
-        onChange={(e) =>
-          setDetails((prevState) => ({
-            ...prevState,
-            facilities: {
-              ...prevState.facilities,
-              [e.target.name]: e.target.checked,
-            },
-          }))
-        }
+        checked={facilities[data.name]}
         modifiers={["display-block"]}
         mixes={["fieldset"]}
         key={data.name}
       />
     ));
 
-    const mediaControls = media.map((data) => (
+    const mediaControls = _media.map((data) => (
       <Control
         id={data.name}
         name={data.name}
         label={data.label}
         value={data.name}
-        checked={details.media[data.name]}
-        onChange={(e) =>
-          setDetails((prevState) => ({
-            ...prevState,
-            media: { ...prevState.media, [e.target.name]: e.target.checked },
-          }))
-        }
+        checked={media[data.name]}
         modifiers={["display-block"]}
         mixes={["fieldset"]}
         key={data.name}
@@ -235,96 +190,155 @@ export const Details = React.memo(
           isExpandable
           modifiers={["details"]}
         >
-          <ExtendedField mixes={["fieldset"]}>
+          <ExtendedField
+            mixes={["fieldset"]}
+            errorMessages={[
+              errors.constructionYear && errors.constructionYear.message,
+            ]}
+          >
             <Label htmlFor="constructionYear" label="rok budowy" />
             <Field
-              id="constructionYear"
-              name="constructionYear"
-              value={constructionYearInput.value}
-              onChange={constructionYearInput.onChange}
               modifiers={["medium"]}
-              maxLength={4}
+              render={(className: string) => (
+                <Controller
+                  as={NumberFormat}
+                  thousandSeparator=""
+                  decimalScale={0}
+                  allowNegative={false}
+                  id="constructionYear"
+                  name="constructionYear"
+                  control={control}
+                  className={className}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
-            <Label htmlFor="buildingType" label="zgłoszenie wysyła" />
-            <SelectField
-              value={details.buildingType}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "buildingType")
-              }
-              isClearable={true}
-              options={buildingTypeOptions}
-              widthMedium={true}
+            <Label htmlFor="buildingType" label="typ budynku" />
+            <Controller
               name="buildingType"
-              inputId="buildingType"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={buildingTypeOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="condition" label="stan mieszkania" />
-            <SelectField
-              value={details.condition}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "condition")
-              }
-              isClearable={true}
-              options={conditionOptions}
-              widthMedium={true}
+            <Controller
               name="condition"
-              inputId="condition"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={conditionOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="level" label="liczba poziomów" />
-            <SelectField
-              value={details.level}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "level")
-              }
-              isClearable={true}
-              options={levelOptions}
-              widthMedium={true}
+            <Controller
               name="level"
-              inputId="level"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={levelOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="kitchenType" label="typ kuchni" />
-            <SelectField
-              value={details.kitchenType}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "kitchenType")
-              }
-              isClearable={true}
-              options={kitchenTypeOptions}
-              widthMedium={true}
+            <Controller
               name="kitchenType"
-              inputId="kitchenType"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={kitchenTypeOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="isBathroomWithWC" label="łazienka i WC" />
-            <SelectField
-              value={details.isBathroomWithWC}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "isBathroomWithWC")
-              }
-              isClearable={true}
-              options={isBathroomWithWCOptions}
-              widthMedium={true}
+            <Controller
               name="isBathroomWithWC"
-              inputId="isBathroomWithWC"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={isBathroomWithWCOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
-          <ExtendedField mixes={["fieldset"]}>
-            <Label htmlFor="insideHeight" label="wysokość pomieszczeń" />
+          <ExtendedField
+            mixes={["fieldset"]}
+            errorMessages={[errors.insideHeight && errors.insideHeight.message]}
+          >
+            <Label htmlFor="insideHeight" label="wysokość pomieszczeń (cm)" />
             <Field
-              id="insideHeight"
-              name="insideHeight"
-              value={insideHeightInput.value}
-              onChange={insideHeightInput.onChange}
               modifiers={["medium"]}
-              maxLength={10}
+              render={(className: string) => (
+                <Controller
+                  as={NumberFormat}
+                  thousandSeparator=" "
+                  decimalSeparator=","
+                  decimalScale={2}
+                  allowedDecimalSeparators={[".", ","]}
+                  allowNegative={false}
+                  id="insideHeight"
+                  name="insideHeight"
+                  control={control}
+                  className={className}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
@@ -333,110 +347,229 @@ export const Details = React.memo(
               label="zapotrzebowanie energetyczne (kWh/(m²·rok))"
             />
             <Field
-              id="energyDemand"
-              name="energyDemand"
-              value={energyDemandInput.value}
-              onChange={energyDemandInput.onChange}
               modifiers={["medium"]}
-              maxLength={10}
+              render={(className: string) => (
+                <Controller
+                  as={NumberFormat}
+                  thousandSeparator=" "
+                  decimalSeparator=","
+                  decimalScale={3}
+                  allowedDecimalSeparators={[".", ","]}
+                  allowNegative={false}
+                  id="energyDemand"
+                  name="energyDemand"
+                  control={control}
+                  className={className}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="heating" label="ogrzewanie" />
-            <SelectField
-              value={details.heating}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "heating")
-              }
-              isClearable={true}
-              options={heatingOptions}
-              widthMedium={true}
+            <Controller
               name="heating"
-              inputId="heating"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={heatingOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="parkingPlace" label="miejsce parkingowe" />
-            <SelectField
-              value={details.parkingPlace}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "parkingPlace")
-              }
-              isClearable={true}
-              options={parkingPlaceOptions}
-              widthMedium={true}
+            <Controller
               name="parkingPlace"
-              inputId="parkingPlace"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={parkingPlaceOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
-            <Label htmlFor="hasbalcony" label="balkon" />
-            <SelectField
-              value={details.hasBalcony}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "hasBalcony")
-              }
-              isClearable={true}
-              options={hasBalconyOptions}
-              widthMedium={true}
-              name="hasbalcony"
-              inputId="hasBalcony"
+            <Label htmlFor="hasBalcony" label="balkon" />
+            <Controller
+              name="hasBalcony"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={hasBalconyOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="hasTerrace" label="taras" />
-            <SelectField
-              value={details.hasTerrace}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "hasTerrace")
-              }
-              isClearable={true}
-              options={hasTerraceOptions}
-              widthMedium={true}
+            <Controller
               name="hasTerrace"
-              inputId="hasTerrace"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={hasTerraceOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField mixes={["fieldset"]}>
             <Label htmlFor="hasElevator" label="winda" />
-            <SelectField
-              value={details.hasElevator}
-              onChange={(option) =>
-                handleSelectChange(option, setDetails, "hasElevator")
-              }
-              isClearable={true}
-              options={hasElevatorOptions}
-              widthMedium={true}
-              inputId="hasElevator"
+            <Controller
               name="hasElevator"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <SelectField
+                  value={value}
+                  onChange={onChange}
+                  isClearable={true}
+                  options={hasElevatorOptions}
+                  widthMedium={true}
+                  name={name}
+                  inputId={name}
+                />
+              )}
             />
           </ExtendedField>
-          <Control
-            id="firstOwner"
+          <Controller
             name="firstOwner"
-            label="oferta z rynku pierwotnego"
-            value="firstOwner"
-            checked={details.firstOwner}
-            onChange={(e) => handleInputChange(e, setDetails)}
-            mixes={["fieldset"]}
+            control={control}
+            defaultValue={false}
+            render={(
+              { onChange, onBlur, value, name, ref },
+              { invalid, isTouched, isDirty }
+            ) => (
+              <Control
+                id={name}
+                name={name}
+                label="oferta z rynku pierwotnego"
+                checked={value}
+                onChange={(e) => onChange(e.target.checked)}
+                mixes={["fieldset"]}
+              />
+            )}
           />
-          <ExtendedField mixes={["fieldset"]}>
+          <ExtendedField
+            mixes={["fieldset"]}
+            errorMessages={[errors.vacatedFrom && errors.vacatedFrom.message]}
+          >
             <Label htmlFor="vacatedFrom" label="dostępne od" />
             <Field
-              id="vacatedFrom"
-              name="vacatedFrom"
-              value={vacatedFromInput.value}
-              onChange={vacatedFromInput.onChange}
               modifiers={["medium"]}
+              render={(className: string) => (
+                <Controller
+                  as={NumberFormat}
+                  format="##.##.####"
+                  mask="_"
+                  allowEmptyFormatting
+                  id="vacatedFrom"
+                  name="vacatedFrom"
+                  control={control}
+                  className={className}
+                />
+              )}
             />
           </ExtendedField>
           <ExtendedField>
             <Label label="udogodnienia" />
-            <ControlsList inputs={facilitiesControls} n={3} />
+            <Controller
+              name="facilities"
+              control={control}
+              defaultValue={facilities}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <ControlsList
+                  inputs={facilitiesControls.map((radio) =>
+                    React.cloneElement(radio, {
+                      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                        const copyFacilities = { ...facilities };
+                        onChange({
+                          ...copyFacilities,
+                          [e.target.name]: e.target.checked,
+                        });
+
+                        setFacilities((prevState) => ({
+                          ...prevState,
+                          [e.target.name]: e.target.checked,
+                        }));
+                      },
+                    })
+                  )}
+                  n={3}
+                />
+              )}
+            />
           </ExtendedField>
           <ExtendedField>
             <Label label="media" />
-            <ControlsList inputs={mediaControls} n={3} />
+            <Controller
+              name="media"
+              control={control}
+              render={(
+                { onChange, onBlur, value, name, ref },
+                { invalid, isTouched, isDirty }
+              ) => (
+                <ControlsList
+                  inputs={mediaControls.map((radio) =>
+                    React.cloneElement(radio, {
+                      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                        const copyMedia = { ...media };
+                        onChange({
+                          ...copyMedia,
+                          [e.target.name]: e.target.checked,
+                        });
+
+                        setMedia((prevState) => ({
+                          ...prevState,
+                          [e.target.name]: e.target.checked,
+                        }));
+                      },
+                    })
+                  )}
+                  n={3}
+                />
+              )}
+            />
           </ExtendedField>
         </Fieldset>
       </div>

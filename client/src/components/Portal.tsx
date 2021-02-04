@@ -1,26 +1,30 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
 
 // File interfaces
 interface PortalProps {
-  children: any;
-  className: string;
-  el: string;
+  container?: HTMLElement;
+  className?: string;
+  element?: string;
   portal?: boolean;
 }
 
 // Props and default props
-type Props = PortalProps;
+type Props = PropsWithChildren<PortalProps>;
 const defaultProps = {
-  className: "portal-root",
-  el: "div",
   portal: true,
 };
 
-export const Portal = ({ children, className, el, portal }: Props) => {
+export const Portal = ({
+  children,
+  container,
+  className,
+  element,
+  portal,
+}: Props): React.ReactElement | React.ReactPortal => {
   const [portalRoot] = useState(() => {
-    const portalRoot = document.createElement(el);
-    portalRoot.classList.add(className);
+    const portalRoot = document.createElement(element || "div");
+    portalRoot.classList.add(className || "portal-root");
     return portalRoot;
   });
 
@@ -32,9 +36,9 @@ export const Portal = ({ children, className, el, portal }: Props) => {
     };
   }, [portalRoot]);
 
-  if (!portal) return children;
+  if (!portal) return <>{children}</>;
 
-  return ReactDOM.createPortal(children, portalRoot);
+  return ReactDOM.createPortal(children, container || portalRoot);
 };
 
 Portal.defaultProps = defaultProps;
