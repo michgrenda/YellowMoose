@@ -5,6 +5,8 @@ import { Button } from "../forms/controls/Button";
 import { Wave } from "../Wave";
 // Icons
 import MenuOutlinedIcon from "@material-ui/icons/MenuOutlined";
+import AddLocationOutlinedIcon from "@material-ui/icons/AddLocationOutlined";
+import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 
 const routes = [
   {
@@ -96,10 +98,12 @@ const buttons = [
   {
     text: "ulubione",
     type: "secondary-outlined",
+    icon: <FavoriteBorderOutlinedIcon fontSize="small" />,
   },
   {
     text: "dodaj ogłoszenie",
     type: "secondary-filled",
+    icon: <AddLocationOutlinedIcon fontSize="small" />,
   },
 ];
 
@@ -204,6 +208,7 @@ export const Navbar = () => {
       <Wave
         component={
           <Button
+            icon={button.icon}
             text={button.text}
             modifiers={["secondary", "medium-500", button.type]}
             mixes={["navbar"]}
@@ -259,17 +264,18 @@ export const Navbar = () => {
               <div className="col-12">
                 <div className="navbar__panel">
                   <ul className="navbar__list">{routesList}</ul>
-                  <ul className="navbar__list d-none d-md-flex">
+                  <ul className="navbar__list d-none d-lg-flex">
                     {buttonsList}
                   </ul>
-                  <ul className="navbar__list d-flex d-md-none">
+                  <ul className="navbar__list d-flex d-lg-none">
                     <li className="navbar__item">
                       <Wave
                         component={
                           <Button
                             icon={<MenuOutlinedIcon />}
+                            title="Menu"
                             modifiers={[
-                              "navbar-menu",
+                              "menu-primary",
                               "border-radius-50",
                               "medium-500",
                             ]}

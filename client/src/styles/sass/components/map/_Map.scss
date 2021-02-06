@@ -1,0 +1,26 @@
+.map-box,
+.listing-box {
+  height: calc(100vh - #{$navbar-height + $searchbar-height});
+  width: 100%;
+}
+
+.map-box {
+  @include media-breakpoint-down(md) {
+    position: absolute;
+    top: -9999px;
+  }
+}
+
+.listing-container {
+  &--is-toggled {
+    @include media-breakpoint-down(md) {
+      .map-box {
+        top: 0;
+      }
+
+      .listing-box {
+        display: none;
+      }
+    }
+  }
+}

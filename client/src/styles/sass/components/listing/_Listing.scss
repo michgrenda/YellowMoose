@@ -9,7 +9,7 @@
   $radial-gradient-color-stop-1: 70%;
   $radial-gradient-color-stop-2: 69%;
 
-  $header-height: 40px;
+  $header-height: 45px;
   $header-margin-B: 10px;
   $link-text-wrapper-before-after-size: 20px;
   /* ===============    End    =============== */
@@ -18,14 +18,21 @@
   background-color: $listing-background-color-primary;
   color: $listing-color-primary;
 
-  height: calc(100vh - #{$navbar-height + $searchbar-height});
+  height: 100%;
+  width: 100%;
 
   font-size: 14px;
+
+  // Mix
+  &__button {
+    margin-right: 15px;
+  }
 
   &__header {
     background-color: $white;
 
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
     height: $header-height;
@@ -34,12 +41,23 @@
     padding-left: 40px;
     margin-bottom: $header-margin-B;
 
-    @media only screen and (max-width: 575px) {
+    @include media-breakpoint-down(sm) {
       padding-left: $link-text-wrapper-before-after-size;
     }
   }
 
-  &__main {
+  &__list {
+    display: flex;
+
+    height: 100%;
+
+    padding: 0;
+    margin: 0;
+
+    list-style: none;
+  }
+
+  &__results {
     height: calc(100% - #{$header-height + $header-margin-B});
 
     padding-right: 5px;
@@ -47,6 +65,7 @@
 
   &__link-text-wrapper {
     display: flex;
+    justify-content: center;
     align-items: center;
 
     height: 100%;
@@ -76,6 +95,8 @@
 
   &__link {
     color: $listing-color-primary;
+
+    display: block;
 
     height: 100%;
 
