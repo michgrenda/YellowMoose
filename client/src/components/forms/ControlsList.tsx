@@ -1,4 +1,5 @@
 import React, { HTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../utils/BEM";
 // Types
@@ -26,17 +27,17 @@ export const ControlsList = ({
   // Variables
   const controlsList = inputs.map((input) => input);
 
-  return (
-    <div className={`controls-list ${modifiersAndMixes}`} {...rest}>
-      <div className="controls-list__row">
-        {new Array(Math.ceil(controlsList.length / n))
-          .fill(0)
-          .map((_, index) => (
-            <div className="controls-list__col" key={index}>
-              {controlsList.splice(0, n)}
-            </div>
-          ))}
+  const controlsListColumns = new Array(Math.ceil(controlsList.length / n))
+    .fill(0)
+    .map((_, index) => (
+      <div className="controls-list__col" key={index}>
+        {controlsList.splice(0, n)}
       </div>
+    ));
+
+  return (
+    <div className={classNames("controls-list", modifiersAndMixes)} {...rest}>
+      <div className="controls-list__row">{controlsListColumns}</div>
     </div>
   );
 };

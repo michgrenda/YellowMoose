@@ -79,6 +79,7 @@ export const Photo = React.memo(
         );
         const nextState = [...prevState.files, ...filesWithPreview];
 
+        // Return the previous state if the number of files is exceeded
         if (maxFiles) {
           isMaxFilesExceeded = nextState.length > maxFiles;
 
@@ -92,10 +93,10 @@ export const Photo = React.memo(
     };
 
     // Variables
-    const thumbs = photo.files.map((file, index) => (
+    const thumbs = photo.files.map(({ preview, name }, index) => (
       <Thumb
-        src={file.preview}
-        alt={file.name}
+        src={preview}
+        alt={name}
         ref={imagesRef[index]}
         buttons={[
           {

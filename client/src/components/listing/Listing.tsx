@@ -1,5 +1,6 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import classNames from "classnames";
 // Components
 import SingleResult from "./SingleResult";
 
@@ -39,32 +40,39 @@ interface ListingProps {
 type Props = ListingProps;
 
 export const Listing = ({ buttons }: Props) => {
+  // Location
+  const location = useLocation();
+
   // TEMPORARY
   // const results = data.map((singleData, index) => (
   //   <SingleResult singleData={singleData} key={index} />
   // ));
 
-  const routesList = routes.map((route) => (
-    <li className="listing__item" key={route.path}>
+  const routesList = routes.map(({ path, text }) => (
+    <li
+      className={classNames(
+        "listing__item",
+        location.pathname === path && "listing__item--is-active"
+      )}
+      key={path}
+    >
       <NavLink
-        to={route.path}
+        to={path}
         className="listing__link"
         activeClassName="listing__link--is-active"
       >
         <div className="listing__link-text-wrapper">
-          <span className="listing__link-text">{route.text}</span>
+          <span className="listing__link-text">{text}</span>
         </div>
       </NavLink>
     </li>
   ));
 
-  const buttonsList =
-    buttons &&
-    buttons.map((button, index) => (
-      <li className="listing__item" key={index}>
-        {button}
-      </li>
-    ));
+  const buttonsList = buttons?.map((button, index) => (
+    <li className="listing__item" key={index}>
+      {button}
+    </li>
+  ));
 
   return (
     <div className="listing">

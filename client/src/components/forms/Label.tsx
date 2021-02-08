@@ -1,4 +1,6 @@
 import React, { LabelHTMLAttributes } from "react";
+
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../utils/BEM";
 // Types
@@ -30,7 +32,7 @@ export const Label = ({
 
   return (
     <>
-      <label className={`label ${modifiersAndMixes}`} {...rest}>
+      <label className={classNames("label", modifiersAndMixes)} {...rest}>
         {label}
       </label>
       {isRequired && <em className="white-space-pre"> {requiredSymbol}</em>}

@@ -1,4 +1,5 @@
 import React, { InputHTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
@@ -27,9 +28,11 @@ export const Field = ({
 
   return (
     <div
-      className={`field ${modifiersAndMixes} ${
-        rest.disabled && "field--is-disabled"
-      } `}
+      className={classNames(
+        "field",
+        rest.disabled && "field--is-disabled",
+        modifiersAndMixes
+      )}
     >
       <div className="field__input-wrapper">
         {render ? (

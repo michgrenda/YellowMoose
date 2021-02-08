@@ -1,4 +1,5 @@
 import React, { useState, FieldsetHTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../utils/BEM";
 // Types
@@ -37,22 +38,23 @@ export const Fieldset = React.memo(
     const handleHeaderClick = () => setIsExpanded((prevState) => !prevState);
 
     // Variables
+    const informationList = information?.map((message, index) => (
+      <p className="fieldset__additional-information" key={index}>
+        {message}
+      </p>
+    ));
+
     const expandableMessage =
       !expandableInformation && " - kliknij aby rozwinąć";
 
-    const informationList =
-      information &&
-      information.map((message, index) => (
-        <p className="fieldset__additional-information" key={index}>
-          {message}
-        </p>
-      ));
-
     return (
       <fieldset
-        className={`fieldset ${modifiersAndMixes} ${
-          isExpanded && "fieldset--is-expanded"
-        } ${isExpandable && "fieldset--is-expandable"}`}
+        className={classNames(
+          "fieldset",
+          isExpanded && "fieldset--is-expanded",
+          isExpandable && "fieldset--is-expandable",
+          modifiersAndMixes
+        )}
         {...rest}
       >
         {title && (

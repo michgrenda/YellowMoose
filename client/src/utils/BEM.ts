@@ -3,9 +3,9 @@ import classNames from "classnames";
 export const modifyAndMix = (
   modifiers: string[] | undefined,
   mixes: string[] | undefined,
-  block: string
+  block: string | undefined
 ) => {
-  if (!mixes && !modifiers) return "";
+  if (!(mixes || modifiers || block)) return "";
 
   const _modifiers: any = {};
   const _mixes: any = {};

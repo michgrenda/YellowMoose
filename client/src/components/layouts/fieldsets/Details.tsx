@@ -192,9 +192,7 @@ export const Details = React.memo(
         >
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[
-              errors.constructionYear && errors.constructionYear.message,
-            ]}
+            errorMessages={[errors.constructionYear?.message]}
           >
             <Label htmlFor="constructionYear" label="rok budowy" />
             <Field
@@ -320,7 +318,7 @@ export const Details = React.memo(
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.insideHeight && errors.insideHeight.message]}
+            errorMessages={[errors.insideHeight?.message]}
           >
             <Label htmlFor="insideHeight" label="wysokość pomieszczeń (cm)" />
             <Field
@@ -489,7 +487,7 @@ export const Details = React.memo(
           />
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.vacatedFrom && errors.vacatedFrom.message]}
+            errorMessages={[errors.vacatedFrom?.message]}
           >
             <Label htmlFor="vacatedFrom" label="dostępne od" />
             <Field
@@ -523,14 +521,16 @@ export const Details = React.memo(
                     React.cloneElement(radio, {
                       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                         const copyFacilities = { ...facilities };
+                        const { name: _name, checked: _checked } = e.target;
+
                         onChange({
                           ...copyFacilities,
-                          [e.target.name]: e.target.checked,
+                          [_name]: _checked,
                         });
 
                         setFacilities((prevState) => ({
                           ...prevState,
-                          [e.target.name]: e.target.checked,
+                          [_name]: _checked,
                         }));
                       },
                     })
@@ -554,14 +554,16 @@ export const Details = React.memo(
                     React.cloneElement(radio, {
                       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                         const copyMedia = { ...media };
+                        const { name: _name, checked: _checked } = e.target;
+
                         onChange({
                           ...copyMedia,
-                          [e.target.name]: e.target.checked,
+                          [_name]: _checked,
                         });
 
                         setMedia((prevState) => ({
                           ...prevState,
-                          [e.target.name]: e.target.checked,
+                          [_name]: _checked,
                         }));
                       },
                     })

@@ -6,12 +6,18 @@ import { Wave } from "../components/Wave";
 import { Button } from "../components/forms/controls/Button";
 // Icons
 import MapOutlinedIcon from "@material-ui/icons/MapOutlined";
+import { FlyToInterpolator } from "react-map-gl";
+// Variables
+import { gridBreakpoints } from "../variables";
 
 export const ListingContainer = () => {
+  // States
+  const [refresher, setRefersher] = useState<boolean>(false);
   // References
   const listingContainerRef = useRef<HTMLDivElement>(null!);
-  const [refresher, setRefersher] = useState<boolean>(false);
 
+  // Methods
+  // -------------------------------------------------------------------
   const toggleMap = useCallback(() => {
     const listingContainer = listingContainerRef.current;
     const isToggled = "listing-container--is-toggled";
@@ -24,6 +30,8 @@ export const ListingContainer = () => {
     }
   }, []);
 
+  // Handlers
+  // -------------------------------------------------------------------
   const handleButtonClick = useCallback(() => toggleMap(), [toggleMap]);
 
   // Variables
@@ -44,6 +52,7 @@ export const ListingContainer = () => {
     ),
     [handleButtonClick]
   );
+
   const MapToggleMapButton = useMemo(
     () => (
       <div
@@ -54,7 +63,7 @@ export const ListingContainer = () => {
         <div className="d-block d-lg-none">
           <Button
             onClick={handleButtonClick}
-            title="Listing"
+            title="Go Back"
             modifiers={["map", "toggle-map"]}
           />
         </div>
@@ -76,8 +85,34 @@ export const ListingContainer = () => {
             <section className="map-box">
               <Map
                 controls={[MapToggleMapButton]}
-                refresher={refresher}
-                setRefresher={setRefersher}
+                refresh={{
+                  refresher: refresher,
+                  setRefresher: setRefersher,
+                }}
+                viewportProps={{
+                  // Poland's center
+                  latitude: 52.1246099075455,
+                  longitude: 19.30063630556,
+                  zoom: 4.5,
+                }}
+                // Poland's bounds
+                bounds={[
+                  [14.1229290098701, 49.0020460154192],
+                  [24.1455979034865, 54.8932281999438],
+                ]}
+                mql={`(min-width: ${gridBreakpoints["lg"]}px)`}
+                viewportTransition={{
+                  transitionDuration: ("auto" as unknown) as number,
+                  transitionEasing: (x: number) =>
+                    x === 0
+                      ? 0
+                      : x === 1
+                      ? 1
+                      : x < 0.5
+                      ? Math.pow(2, 20 * x - 10) / 2
+                      : (2 - Math.pow(2, -20 * x + 10)) / 2,
+                  transitionInterpolator: new FlyToInterpolator(),
+                }}
               />
             </section>
           </div>

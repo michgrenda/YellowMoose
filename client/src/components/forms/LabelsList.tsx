@@ -1,4 +1,5 @@
 import React, { HTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../utils/BEM";
 // Types
@@ -34,9 +35,7 @@ export const LabelsList = ({
   const modifiersAndMixes = modifyAndMix(modifiers, mixes, "labels-list");
 
   // Separator element
-  const separator = (
-    <span className="white-space-pre"> {separatorSymbol} </span>
-  );
+  const separator = <span className="white-space-pre">{separatorSymbol}</span>;
 
   // Variables
   const labelsList = labels.map((label, index, array) => (
@@ -48,9 +47,11 @@ export const LabelsList = ({
 
   return (
     <div
-      className={`labels-list ${modifiersAndMixes} ${
-        showSeparator && "labels-list--show-separator"
-      }`}
+      className={classNames(
+        "labels-list",
+        showSeparator && "labels-list--show-separator",
+        modifiersAndMixes
+      )}
       {...rest}
     >
       <div className="labels-list__labels">

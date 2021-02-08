@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 // React-select
 import Select, { Props as ReactSelectProps } from "react-select";
 import { customStyles } from "../../../utils/react-select/styles";
@@ -26,21 +27,16 @@ const defaultProps = {
 export const SelectField = ({
   className,
   isRequired,
-  control,
   modifiers,
   mixes,
   ...rest
 }: Props) => {
   // Manage received modifiers and mixes
-  const modifiersAndMixes = modifyAndMix(
-    modifiers,
-    mixes,
-    "select-field-wrapper"
-  );
+  const modifiersAndMixes = modifyAndMix(modifiers, mixes, className);
 
   return (
     <Select
-      className={`${className} ${modifiersAndMixes}`}
+      className={classNames(className, modifiersAndMixes)}
       required={isRequired}
       {...rest}
     />

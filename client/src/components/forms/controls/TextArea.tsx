@@ -1,4 +1,5 @@
 import React, { TextareaHTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
@@ -15,9 +16,11 @@ export const TextArea = ({ register, modifiers, mixes, ...rest }: Props) => {
 
   return (
     <div
-      className={`text-area ${modifiersAndMixes} ${
-        rest.disabled && "text-area--is-disabled"
-      }`}
+      className={classNames(
+        "text-area",
+        rest.disabled && "text-area--is-disabled",
+        modifiersAndMixes
+      )}
     >
       <div className="text-area__input-wrapper">
         <textarea

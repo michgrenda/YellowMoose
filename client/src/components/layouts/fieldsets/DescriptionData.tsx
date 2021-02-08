@@ -19,7 +19,7 @@ export const DescriptionData = React.memo(
         <Fieldset title="opis nieruchomości" modifiers={["description-data"]}>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.description && errors.description.message]}
+            errorMessages={[errors.description?.message]}
           >
             <Label htmlFor="description" label="opis" isRequired />
             <TextArea

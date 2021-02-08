@@ -53,6 +53,8 @@ type Props = HTMLAttributes<HTMLDivElement> &
 
 export const Location = React.memo(
   ({ register, control, errors, setValue, watch, ...rest }: Props) => {
+    // Methods
+    // -------------------------------------------------------------------
     const autoCompleteVoivodeship = useCallback(
       async (
         searchText: string,
@@ -70,6 +72,7 @@ export const Location = React.memo(
             }
           );
 
+          // Get voivodeship
           const voivodeship = geocodingData.data.features[0].context
             .filter(
               (value: { [index: string]: any }) =>
@@ -123,11 +126,7 @@ export const Location = React.memo(
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[
-              errors.voivodeship &&
-                errors.voivodeship.value &&
-                errors.voivodeship.value.message,
-            ]}
+            errorMessages={[errors.voivodeship?.value?.message]}
           >
             <Label htmlFor="voivodeship" label="województwo" isRequired />
             <Controller

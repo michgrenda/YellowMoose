@@ -39,7 +39,7 @@ export const ContactData = React.memo(
         <Fieldset title="informacje podstawowe" modifiers={["contact-data"]}>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.firstname && errors.firstname.message]}
+            errorMessages={[errors.firstname?.message]}
           >
             <Label htmlFor="firstname" label="imię" isRequired />
             <Field
@@ -52,7 +52,7 @@ export const ContactData = React.memo(
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.email && errors.email.message]}
+            errorMessages={[errors.email?.message]}
           >
             <Label htmlFor="email" label="twój adres e-mail" isRequired />
             <Field
@@ -66,8 +66,8 @@ export const ContactData = React.memo(
           <ExtendedField
             mixes={["fieldset"]}
             errorMessages={[
-              errors.dialCode && errors.dialCode.message,
-              errors.phoneNumber && errors.phoneNumber.message,
+              errors.dialCode?.message,
+              errors.phoneNumber?.message,
             ]}
           >
             <Label
@@ -117,11 +117,7 @@ export const ContactData = React.memo(
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[
-              errors.ownerType &&
-                errors.ownerType.value &&
-                errors.ownerType.value.message,
-            ]}
+            errorMessages={[errors.ownerType?.value?.message]}
           >
             <Label htmlFor="ownerType" label="zgłoszenie wysyła" isRequired />
             <Controller

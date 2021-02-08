@@ -1,4 +1,5 @@
 import React, { HTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../utils/BEM";
 // Types
@@ -33,6 +34,7 @@ export const FieldsList = ({
     <span className="white-space-pre"> {separatorSymbol} </span>
   );
 
+  // Variables
   const fieldsList = inputs.map((input, index, array) => (
     <React.Fragment key={index}>
       {input}
@@ -42,9 +44,11 @@ export const FieldsList = ({
 
   return (
     <div
-      className={`fields-list ${modifiersAndMixes} ${
-        showSeparator && "fields-list--show-separator"
-      }`}
+      className={classNames(
+        "fields-list",
+        showSeparator && "fields-list--show-separator",
+        modifiersAndMixes
+      )}
       {...rest}
     >
       <div className="fields-list__fields">{fieldsList}</div>

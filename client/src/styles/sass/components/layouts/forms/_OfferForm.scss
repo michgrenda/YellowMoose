@@ -28,7 +28,7 @@
 .mapboxgl-ctrl button:not(:disabled) {
   &.focus-visible,
   &:hover {
-    background-color: darken($color: $color-white, $amount: 1%);
+    background-color: darken($color: $color-white, $amount: 2%);
   }
 }
 

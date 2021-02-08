@@ -1,4 +1,5 @@
 import React, { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../utils/BEM";
 // Types
@@ -31,29 +32,27 @@ export const Thumb = React.forwardRef<HTMLImageElement | null, Props>(
     const modifiersAndMixes = modifyAndMix(modifiers, mixes, "thumb");
 
     // Variables
-    const buttonsList =
-      buttons &&
-      buttons.map((button) => {
-        const {
-          attributes,
-          identifier,
-          icon: { component: Icon, props: iconProps },
-        } = button;
+    const buttonsList = buttons?.map((button) => {
+      const {
+        attributes,
+        identifier,
+        icon: { component: Icon, props: iconProps },
+      } = button;
 
-        return (
-          <button
-            type="button"
-            className="thumb__button"
-            data-identifier={identifier}
-            {...attributes}
-          >
-            <Icon className="thumb__icon" fontSize="small" {...iconProps} />
-          </button>
-        );
-      });
+      return (
+        <button
+          type="button"
+          className="thumb__button"
+          data-identifier={identifier}
+          {...attributes}
+        >
+          <Icon className="thumb__icon" fontSize="small" {...iconProps} />
+        </button>
+      );
+    });
 
     return (
-      <div className={`thumb ${modifiersAndMixes}`} {...rest}>
+      <div className={classNames("thumb", modifiersAndMixes)} {...rest}>
         <div className="thumb__buttons-container">{buttonsList}</div>
         <div className="thumb__image-wrapper">
           <img src={src} alt={alt} className="thumb__image" ref={ref} />

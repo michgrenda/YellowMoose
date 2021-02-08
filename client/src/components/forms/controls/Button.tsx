@@ -1,4 +1,5 @@
 import React, { ButtonHTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
@@ -19,7 +20,11 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
     const modifiersAndMixes = modifyAndMix(modifiers, mixes, "button");
 
     return (
-      <button className={`button ${modifiersAndMixes}`} ref={ref} {...rest}>
+      <button
+        className={classNames("button", modifiersAndMixes)}
+        ref={ref}
+        {...rest}
+      >
         {icon && <span className="button__icon">{icon}</span>}
         {text && <span className="button__text">{text}</span>}
       </button>

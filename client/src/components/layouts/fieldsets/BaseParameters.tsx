@@ -43,12 +43,8 @@ type Props = HTMLAttributes<HTMLDivElement> &
 export const BaseParameters = React.memo(
   ({ register, control, clearErrors, errors, watch, ...rest }: Props) => {
     // Variables
-    const floorErrorMessage =
-      errors.floor && errors.floor.value && errors.floor.value.message;
-    const numberOfFloorsErrorMessage =
-      errors.numberOfFloors &&
-      errors.numberOfFloors.value &&
-      errors.numberOfFloors.value.message;
+    const floorErrorMessage = errors.floor?.value?.message;
+    const numberOfFloorsErrorMessage = errors.numberOfFloors?.value?.message;
 
     return (
       <div className="base-parameteres" {...rest}>
@@ -69,7 +65,7 @@ export const BaseParameters = React.memo(
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.area && errors.area.message]}
+            errorMessages={[errors.area?.message]}
           >
             <Label htmlFor="area" label="powierzchnia (m²)" isRequired />
             <Field
@@ -93,7 +89,7 @@ export const BaseParameters = React.memo(
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.rooms && errors.rooms.message]}
+            errorMessages={[errors.rooms?.message]}
           >
             <Label htmlFor="rooms" label="liczba pokoi" isRequired />
             <Field
@@ -115,7 +111,7 @@ export const BaseParameters = React.memo(
           </ExtendedField>
           <ExtendedField
             mixes={["fieldset"]}
-            errorMessages={[errors.price && errors.price.message]}
+            errorMessages={[errors.price?.message]}
           >
             <Label htmlFor="price" label="cena (czynsz)/mies" isRequired />
             <FieldsList

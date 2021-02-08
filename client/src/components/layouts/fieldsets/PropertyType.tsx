@@ -101,7 +101,7 @@ export const PropertyType = React.memo(
     ...rest
   }: Props) => {
     // States
-    const [mounted, setMounted] = useState<boolean>(false);
+    const [, setMounted] = useState<boolean>(false);
     // Types states
     const [propertyType, setPropertyType] = useState<PropertyTypeType>(
       propertyTypeProps
@@ -113,9 +113,7 @@ export const PropertyType = React.memo(
     const subtypeRef = useRef<HTMLDivElement>(null!);
 
     // Refresh (solution to portal problem)
-    useEffect(() => {
-      setMounted(true);
-    }, []);
+    useEffect(() => setMounted(true), []);
 
     // Variables
     // Generate property types and subtypes as radio inputs
@@ -151,6 +149,7 @@ export const PropertyType = React.memo(
                   />
                   {subtypes && isTypeChecked && (
                     <Portal container={subtypeRef.current}>
+                      {/* Subtype portal */}
                       <Controller
                         name={subtypes.name}
                         control={control}
@@ -196,6 +195,7 @@ export const PropertyType = React.memo(
         )}
       />
     );
+
     // Render subtypes
     const areSubtypes = propertySubtypes.includes(propertyType);
 

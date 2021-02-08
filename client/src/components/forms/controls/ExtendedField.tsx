@@ -1,4 +1,5 @@
 import React, { HTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Components
@@ -28,17 +29,15 @@ export const ExtendedField = ({
   const modifiersAndMixes = modifyAndMix(modifiers, mixes, "extended-field");
 
   // Variables
-  const errorsList =
-    errorMessages &&
-    errorMessages
-      .filter((errorMessage) => errorMessage)
-      .map((errorMessage, index) => (
-        <Error errorMessage={errorMessage} key={index} />
-      ));
+  const errorsList = errorMessages
+    ?.filter((errorMessage) => errorMessage)
+    .map((errorMessage, index) => (
+      <Error errorMessage={errorMessage} key={index} />
+    ));
 
   return (
     <div
-      className={`extended-field ${modifiersAndMixes}`}
+      className={classNames("extended-field", modifiersAndMixes)}
       data-valid={
         errorsList ? (errorsList.length ? "invalid" : "valid") : "valid"
       }

@@ -1,14 +1,9 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 // Modal
 import ReactModal, { Props as ReactModalProps } from "react-modal";
 
-// File interfaces
-interface ModalProps {
-  children: any;
-}
-
 // Props and default props
-type Props = ModalProps & ReactModalProps;
+type Props = PropsWithChildren<ReactModalProps>;
 const defaultProps = {
   portalClassName: "modal",
   overlayClassName: "modal__overlay",

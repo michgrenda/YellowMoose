@@ -1,4 +1,5 @@
 import React, { InputHTMLAttributes } from "react";
+import classNames from "classnames";
 // Utils
 import { modifyAndMix } from "../../../utils/BEM";
 // Types
@@ -24,11 +25,12 @@ export const Control = ({ label, type, modifiers, mixes, ...rest }: Props) => {
   // -------------------------------------------------------------------
   const handleLabelKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     const keyCode = e.which || e.key;
+    const element = e.currentTarget;
 
     switch (keyCode) {
       case "Enter":
       case 13:
-        e.currentTarget.click();
+        element.click();
         break;
       default:
         break;
@@ -38,15 +40,16 @@ export const Control = ({ label, type, modifiers, mixes, ...rest }: Props) => {
   return (
     <div className="h">
       <div
-        className={`control ${
-          type === "checkbox" ? "control--is-checkbox" : "control--is-radio"
-        } ${
+        className={classNames(
+          "control",
+          type === "checkbox" ? "control--is-checkbox" : "control--is-radio",
           !rest.disabled
             ? rest.checked
               ? "control--is-selected"
               : "control--is-not-selected"
-            : "control--is-disabled"
-        } ${modifiersAndMixes}`}
+            : "control--is-disabled",
+          modifiersAndMixes
+        )}
       >
         <span className="control__input-wrapper">
           <input className="control__input" type={type} {...rest} />

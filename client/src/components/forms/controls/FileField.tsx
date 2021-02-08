@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Dropzone, { DropzoneProps, FileRejection } from "react-dropzone";
+import classNames from "classnames";
 // Components
 import { Error } from "../Error";
 // Utils
@@ -33,6 +34,27 @@ export const FileField = ({
   // Manage received modifiers and mixes
   const modifiersAndMixes = modifyAndMix(modifiers, mixes, "file-field");
 
+  // Methods
+  // -------------------------------------------------------------------
+  const orderErrors = (fileRejections: FileRejection[]) => {
+    const errorCodes: { errorCode: string }[] = [];
+
+    // Get all errors
+    fileRejections.forEach((fileRejection) =>
+      fileRejection.errors.forEach(({ code }) =>
+        errorCodes.push({ errorCode: code })
+      )
+    );
+
+    // Get all unique errors
+    return errorCodes.filter(
+      (uniqueError, index, array) =>
+        array.findIndex(
+          (error) => error.errorCode === uniqueError.errorCode
+        ) === index
+    );
+  };
+
   // Handlers
   // -------------------------------------------------------------------
   const handleDropzoneDrop = (acceptedFiles: File[]) => {
@@ -40,22 +62,13 @@ export const FileField = ({
   };
 
   const handleDropzoneDropRejected = (fileRejections: FileRejection[]) => {
-    const errorCodes: { errorCode: string }[] = [];
-    fileRejections.forEach((fileRejection) =>
-      fileRejection.errors.forEach((e) =>
-        errorCodes.push({ errorCode: e.code })
-      )
-    );
-
-    const uniqueErrorCodes = errorCodes.filter(
-      (v, i, a) => a.findIndex((t) => t.errorCode === v.errorCode) === i
-    );
-    setErrors(uniqueErrorCodes);
+    const orderedErrors = orderErrors(fileRejections);
+    setErrors(orderedErrors);
   };
 
   // Variables
-  const translatedErrors = errors.map((error) => {
-    switch (error.errorCode) {
+  const translatedErrors = errors.map(({ errorCode }) => {
+    switch (errorCode) {
       case "too-many-files":
         return `za dużo plików (maksymalnie ${rest.maxFiles})`;
       case "file-invalid-type":
@@ -90,13 +103,14 @@ export const FileField = ({
           <div className="file-field-wrapper">
             <div
               {...getRootProps({
-                className: `file-field ${
-                  rest.disabled && "file-field--is-disabled"
-                } ${isDragActive && "file-field--is-drag-active"} ${
-                  isDragAccept && "file-field--is-drag-accept"
-                } ${
-                  isDragReject && "file-field--is-drag-reject"
-                } ${modifiersAndMixes}`,
+                className: classNames(
+                  "file-field",
+                  rest.disabled && "file-field--is-disabled",
+                  isDragActive && "file-field--is-drag-active",
+                  isDragAccept && "file-field--is-drag-accept",
+                  isDragReject && "file-field--is-drag-reject",
+                  modifiersAndMixes
+                ),
               })}
             >
               {component}

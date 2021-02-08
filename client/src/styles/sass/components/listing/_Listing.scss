@@ -93,6 +93,12 @@
     }
   }
 
+  &__item {
+    &--is-active {
+      z-index: 9;
+    }
+  }
+
   &__link {
     color: $listing-color-primary;
 
@@ -110,7 +116,7 @@
     &--is-active {
       background-color: $listing-background-color-primary;
 
-      z-index: 9;
+      // z-index: 9;
 
       #{$root}__link-text-wrapper {
         &:before {

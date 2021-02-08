@@ -4,12 +4,16 @@ import ReactMapGL, {
   MapRef,
   NavigationControl,
   AttributionControl,
-  FlyToInterpolator,
 } from "react-map-gl";
 // Variables
-import { MAPBOX_ACCESS_TOKEN, gridBreakpoints } from "../../variables";
+import { MAPBOX_ACCESS_TOKEN } from "../../variables";
 // Types
-import { LngLatBounds, CameraForBoundsOptions } from "mapbox-gl";
+import {
+  LngLatBounds,
+  CameraForBoundsOptions,
+  CameraForBoundsResult,
+  LngLatBoundsLike,
+} from "mapbox-gl";
 
 // Styles
 const navigationControlStyle = {
@@ -23,27 +27,33 @@ const attributionControlStyle = {
 };
 
 // File types
-type FitBoundsType = Pick<
-  ViewportProps,
-  | "transitionDuration"
-  | "transitionEasing"
-  | "transitionInterpolator"
-  | "transitionInterruption"
->;
+type BoundsType =
+  | [[number, number], [number, number]]
+  | [number, number, number, number];
 
 // File interfaces
 interface MapProps {
-  center?: {
-    latitude: number;
-    longitude: number;
-  };
-  zoom?: number;
-  bounds?:
-    | [[number, number], [number, number]]
-    | [number, number, number, number];
+  viewportProps?: Omit<
+    ViewportProps,
+    | "transitionDuration"
+    | "transitionEasing"
+    | "transitionInterpolator"
+    | "transitionInterruption"
+  >;
+  viewportTransition?: Pick<
+    ViewportProps,
+    | "transitionDuration"
+    | "transitionEasing"
+    | "transitionInterpolator"
+    | "transitionInterruption"
+  >;
+  bounds?: BoundsType;
+  mql?: string;
   controls?: React.ReactElement[];
-  refresher?: boolean;
-  setRefresher?: React.Dispatch<React.SetStateAction<boolean>>;
+  refresh?: {
+    refresher: boolean;
+    setRefresher: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 }
 
 // Props and default props
@@ -51,30 +61,23 @@ type Props = MapProps;
 
 export const Map = React.memo(
   ({
-    center: { latitude, longitude } = {
-      latitude: 52.1246099075455,
-      longitude: 19.30063630556,
-    },
-    zoom = 5,
-    bounds = [
-      [14.1229290098701, 49.0020460154192],
-      [24.1455979034865, 54.8932281999438],
-    ],
+    viewportProps = {},
+    viewportTransition = {},
+    bounds,
+    mql,
     controls,
-    refresher,
-    setRefresher,
+    refresh,
   }: Props) => {
     // States
     const [viewport, setViewport] = useState<ViewportProps>({
-      latitude,
-      longitude,
-      zoom,
+      ...viewportProps,
     });
-
     const [loaded, setLoaded] = useState<boolean>(false);
     // References
     const mapRef = useRef<MapRef>(null!);
 
+    // Methods
+    // -------------------------------------------------------------------
     // Convert bounds to appropriate shape
     const convertBounds = useCallback(
       (bounds: LngLatBounds) => [
@@ -85,8 +88,7 @@ export const Map = React.memo(
     );
 
     const calcualteBounds = useCallback(
-      (error: number = 0.5) => {
-        const map = mapRef.current.getMap();
+      (map: any, bounds: BoundsType, error: number = 0.5) => {
         // Get current and initial bounds and then flat
         // west, south, east, north
         const currentBounds = convertBounds(map.getBounds()).flat();
@@ -100,25 +102,29 @@ export const Map = React.memo(
             Math.abs(currentBounds[3] - initialBounds[3]) < error)
         );
       },
-      [bounds, convertBounds]
+      [convertBounds]
     );
 
     const fitBounds = useCallback(
       (
-        cameraForBoundsOption: CameraForBoundsOptions = {},
-        viewportTransition: FitBoundsType = {
-          transitionDuration: 1000,
-          transitionInterpolator: new FlyToInterpolator(),
-        }
+        map: any,
+        bounds: LngLatBoundsLike,
+        cameraForBoundsOptions: CameraForBoundsOptions = {}
       ) => {
-        const map = mapRef.current.getMap();
+        const _cameraForBoundsOptions: CameraForBoundsOptions = {
+          padding: 20,
+          ...cameraForBoundsOptions,
+        };
 
         // Get appropriate values
         const {
           center: { lat: latitude, lng: longitude },
           zoom,
           bearing,
-        } = map.cameraForBounds(bounds, cameraForBoundsOption);
+        }: CameraForBoundsResult = map.cameraForBounds(
+          bounds,
+          _cameraForBoundsOptions
+        );
 
         // Update viewport state
         setViewport((prevViewport) => ({
@@ -130,25 +136,32 @@ export const Map = React.memo(
           ...viewportTransition,
         }));
       },
-      [bounds]
+      [viewportTransition]
     );
 
     // Fit a map to a bounding box
     useEffect(() => {
-      if (refresher) {
-        if (setRefresher) setRefresher(false);
-        if (calcualteBounds()) fitBounds();
+      if (refresh) {
+        const { refresher, setRefresher } = refresh;
+
+        if (refresher) {
+          const map = mapRef.current.getMap();
+
+          if (setRefresher) setRefresher(false);
+          if (bounds) if (calcualteBounds(map, bounds)) fitBounds(map, bounds);
+        }
       }
-    }, [refresher, setRefresher, fitBounds, calcualteBounds]);
+    }, [refresh, bounds, fitBounds, calcualteBounds]);
 
     // Fit a map to a bounding box
     useEffect(() => {
       if (loaded) {
+        const map = mapRef.current.getMap();
+
         setLoaded(false);
-        if (matchMedia(`(min-width: ${gridBreakpoints["lg"]}px)`).matches)
-          fitBounds();
+        if (!mql || matchMedia(mql).matches) if (bounds) fitBounds(map, bounds);
       }
-    }, [loaded, setLoaded, fitBounds]);
+    }, [loaded, bounds, fitBounds, mql]);
 
     return (
       <ReactMapGL

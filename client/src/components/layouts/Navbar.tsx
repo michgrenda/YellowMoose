@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { NavLink, Link } from "react-router-dom";
+import classNames from "classnames";
 // Components
 import { Button } from "../forms/controls/Button";
 import { Wave } from "../Wave";
@@ -15,7 +16,7 @@ const routes = [
     sublist: [
       {
         title: "",
-        options: [
+        routes: [
           {
             path: "/buy/flats",
             text: "mieszkanie",
@@ -42,7 +43,7 @@ const routes = [
     sublist: [
       {
         title: "od kogoś",
-        options: [
+        routes: [
           {
             path: "/rent/for-rent/rooms",
             text: "pokój",
@@ -67,7 +68,7 @@ const routes = [
       },
       {
         title: "komuś",
-        options: [
+        routes: [
           {
             path: "/rent/form/rooms",
             text: "pokój",
@@ -102,158 +103,122 @@ const buttons = [
   },
   {
     text: "dodaj ogłoszenie",
-    type: "secondary-filled",
+    type: "secondary-outlined",
     icon: <AddLocationOutlinedIcon fontSize="small" />,
   },
 ];
 
 export const Navbar = () => {
   // States
-  // [navbar__sublist-wrapper , navbar__item--is-hovered]
-  const [subpanelElements, setSubpanelElements] = useState<
-    [HTMLElement, HTMLElement]
-  >(null!);
+  const [subpanelPath, setSubpanelPath] = useState<string | null>(null);
   // References
   const subpanelRef = useRef<HTMLDivElement>(null!);
 
   // Methods
   // -------------------------------------------------------------------
   // Close subpanel
-  const closeSubpanel = (e: React.MouseEvent<HTMLElement>) => {
+  const closeSubpanel = useCallback(() => {
     const subpanel = subpanelRef.current;
-    if (subpanel) {
-      if (
-        !(
-          e.relatedTarget instanceof HTMLElement &&
-          subpanel.contains(e.relatedTarget)
-        )
-      ) {
-        if (subpanelElements) {
-          // Remove indicator
-          subpanelElements[1].classList.remove("navbar__item--is-hovered");
-          // Close subpanel
-          subpanel.classList.remove("navbar__subpanel--is-extended");
-          subpanelElements[0].style.display = "none";
-        }
-      }
-    }
-  };
 
-  const openSubpanel = (e: React.MouseEvent<HTMLElement>) => {
+    subpanel.classList.remove("navbar__subpanel--is-extended");
+    setSubpanelPath(null);
+  }, []);
+
+  // Open subpanel
+  const openSubpanel = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const element = e.currentTarget;
     const subpanel = subpanelRef.current;
+    const pathname = element.dataset.path || element.getAttribute("data-path");
 
-    const pathname = element.dataset.path || element.getAttribute("path");
-
-    if (subpanel) {
-      const parentElement = element.parentElement;
-      const subpanelChildren = Array.from(subpanel.children) as HTMLElement[];
-      const currentSublistWrapper = subpanelChildren.find((sublistWrapper) => {
-        const name =
-          sublistWrapper.dataset.name || sublistWrapper.getAttribute("name");
-
-        if (pathname && name) return name === pathname;
-
-        return false;
-      });
-
-      if (currentSublistWrapper && parentElement) {
-        // Add indicator
-        parentElement.classList.add("navbar__item--is-hovered");
-        // Open subpanel
-        subpanel.classList.add("navbar__subpanel--is-extended");
-        currentSublistWrapper.style.display = "block";
-
-        setSubpanelElements([currentSublistWrapper, parentElement]);
-      }
-    }
-  };
+    subpanel.classList.add("navbar__subpanel--is-extended");
+    setSubpanelPath(pathname);
+  }, []);
 
   // Handlers
   // -------------------------------------------------------------------
   // Open corresponding subpanel
-  const handleLinkMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+  const handleLinkMouseEnter = (e: React.MouseEvent<HTMLElement>) =>
     openSubpanel(e);
-  };
 
-  const handleLinkMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    closeSubpanel(e);
-  };
-
-  const handleSubpanelMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    closeSubpanel(e);
-  };
+  // Close subpanel
+  const handleSubpanelMouseLeave = (e: React.MouseEvent<HTMLElement>) =>
+    closeSubpanel();
 
   // Variables
-  const routesList = routes.map((route) => (
+  const routesList = routes.map(({ path, text }) => (
     <li
-      className="navbar__item"
-      key={route.path}
-      onMouseLeave={handleLinkMouseLeave}
+      className={classNames(
+        "navbar__item",
+        path === subpanelPath && "navbar__item--is-hovered"
+      )}
+      key={path}
     >
       <NavLink
         className="navbar__link"
         activeClassName="navbar__link--is-active"
-        to={route.path}
-        data-path={route.path}
+        to={path}
+        data-path={path}
         onMouseEnter={handleLinkMouseEnter}
       >
-        {route.text}
+        {text}
       </NavLink>
     </li>
   ));
 
-  const buttonsList = buttons.map((button, index) => (
+  // Close subpanel when the mouse leaves the window
+  useEffect(() => {
+    document.addEventListener("mouseleave", closeSubpanel);
+    return () => document.removeEventListener("mouseleave", closeSubpanel);
+  }, [closeSubpanel]);
+
+  const sublists = routes
+    .filter(({ sublist }) => sublist)
+    .map(({ path, sublist }) => {
+      return (
+        path === subpanelPath && (
+          <div className="navbar__sublist-wrapper" key={path}>
+            <div className="row">
+              {sublist.map(({ title, routes }, index) => (
+                <div className="col-12 col-sm-6 col-md-3" key={index}>
+                  <div className="navbar__sublist">
+                    {title && (
+                      <h3 className="navbar__sublist-title">{title}</h3>
+                    )}
+                    <ul className="navbar__sublist-options">
+                      {routes.map(({ path, text }) => (
+                        <li className="navbar__subitem" key={path}>
+                          <Link
+                            className="navbar__link navbar__link--subpanel"
+                            to={path}
+                          >
+                            {text}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      );
+    });
+
+  const buttonsList = buttons.map(({ icon, text, type }, index) => (
     <li className="navbar__item" key={index}>
       <Wave
         component={
           <Button
-            icon={button.icon}
-            text={button.text}
-            modifiers={["secondary", "medium-500", button.type]}
+            icon={icon}
+            text={text}
+            modifiers={["secondary", "medium-500", type]}
             mixes={["navbar"]}
           />
         }
       />
     </li>
   ));
-
-  const sublists = routes.map((route) => {
-    return (
-      route.sublist && (
-        <div
-          className="navbar__sublist-wrapper"
-          style={{ display: "none" }}
-          key={route.path}
-          data-name={route.path}
-        >
-          <div className="row">
-            {route.sublist.map((subitem, index) => (
-              <div className="col-12 col-sm-6 col-md-3" key={index}>
-                <div className="navbar__sublist">
-                  {subitem.title && (
-                    <h3 className="navbar__sublist-title">{subitem.title}</h3>
-                  )}
-                  <ul className="navbar__sublist-options">
-                    {subitem.options.map((option) => (
-                      <li className="navbar__subitem" key={option.path}>
-                        <NavLink
-                          className="navbar__link navbar__link--subpanel"
-                          to={option.path}
-                        >
-                          {option.text}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-    );
-  });
 
   return (
     <header>
